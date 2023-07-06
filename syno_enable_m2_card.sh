@@ -10,7 +10,7 @@
 #-----------------------------------------------------------------------------------
 
 
-scriptver="v1.0.1"
+scriptver="v1.0.2"
 script=Synology_enable_M2_card
 repo="007revad/Synology_enable_M2_card"
 
@@ -470,12 +470,17 @@ edit_modeldtb(){
     if [[ -f /etc.defaults/model.dtb ]]; then
         backupdb "$modeldtb"
         if ! grep --text "$1" /etc.defaults/model.dtb >/dev/null; then
-            if [[ $modelname == "DS1821+" ]] || [[ $modelname == "DS1621+" ]] ||\
-                [[ $modelname == "DS1520+" ]] || [[ $modelname == "RS822rp+" ]] ||\
-                [[ $modelname == "RS822+" ]] || [[ $modelname == "RS1221rp+" ]] ||\
-                [[ $modelname == "RS1221+" ]];
+            if [[ $modelname == "DS1520+" ]] ||\
+                [[ $modelname == "DS1621+" ]] || [[ $modelname == "DS1821+" ]] ||\
+                [[ $modelname == "DS1823+" ]] || [[ $modelname == "DS2422+" ]] ||\
+                [[ $modelname == "RS1221+" ]] || [[ $modelname == "RS1221RP+" ]] ||\
+                [[ $modelname == "RS2421+" ]] || [[ $modelname == "RS2421RP+" ]] ||\
+                [[ $modelname == "RS2423+" ]] || [[ $modelname == "RS2821RP+" ]] ||\
+                [[ $modelname == "RS822+" ]] || [[ $modelname == "RS822RP+" ]];
+
 
 # NEED TO SORT OUT rp OR RP IN model.dtb and adaptor_cards.conf ####################################################
+
 
             then
                 echo "" >&2
