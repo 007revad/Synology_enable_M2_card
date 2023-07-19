@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #-----------------------------------------------------------------------------------
-# Create volume on M.2 drive(s) on Synology models that don't have a GUI option
+# Enable M.2 cards on Synology models that officially don't support those cards
 #
 # Github: https://github.com/007revad/Synology_enable_M2_card
 # Script verified at https://www.shellcheck.net/
@@ -10,7 +10,7 @@
 #-----------------------------------------------------------------------------------
 
 
-scriptver="v1.0.2"
+scriptver="v1.0.3"
 script=Synology_enable_M2_card
 repo="007revad/Synology_enable_M2_card"
 
@@ -102,7 +102,8 @@ if options="$(getopt -o abcdefghijklmnopqrstuvwxyz0123456789 -a \
                 ;;
             *)                  # Show usage options
                 echo -e "Invalid option '$1'\n"
-                usage "$1"
+                usage
+                exit
                 ;;
         esac
         shift
