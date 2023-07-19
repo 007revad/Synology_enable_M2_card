@@ -57,9 +57,9 @@ sudo -i /volume1/scripts/syno_enable_m2_card.sh
 
 After any DSM update you will need to run this script, and the Synology_enable_M2_card script again. 
 
-### Schedule the script to run at shut-dwon
+### Schedule the script to run at shutdown
 
-Or you can schedule Synology_enable_M2_card to run when the Synology shuts down, to avoid having to remember to run the script after a DSM update.
+Or you can schedule Synology_enable_M2_card to run when the Synology shutdown, to avoid having to remember to run the script after a DSM update.
 
 See <a href=how_to_schedule.md/>How to schedule a script in Synology Task Scheduler</a>
 
