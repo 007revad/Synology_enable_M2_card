@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 #-----------------------------------------------------------------------------------
-# Enable M.2 cards on Synology models that officially don't support those cards
+# Enable M.2 PCIe cards in Synology NAS that don't officially support them
+#
+# Allows using your E10M20-T1, M2D20, M2D18 or M2D17 cards in Synology NAS models 
+# that aren't on their supported model list.
 #
 # Github: https://github.com/007revad/Synology_enable_M2_card
 # Script verified at https://www.shellcheck.net/
@@ -9,8 +12,7 @@
 # sudo -i /volume1/scripts/syno_enable_m2_card.sh
 #-----------------------------------------------------------------------------------
 
-
-scriptver="v1.0.3"
+scriptver="v1.0.4"
 script=Synology_enable_M2_card
 repo="007revad/Synology_enable_M2_card"
 
@@ -52,6 +54,7 @@ Options:
   -v, --version    Show the script version
   
 EOF
+    exit 0
 }
 
 
@@ -61,6 +64,7 @@ $script $scriptver - by 007revad
 
 See https://github.com/$repo
 EOF
+    exit 0
 }
 
 
@@ -76,11 +80,9 @@ if options="$(getopt -o abcdefghijklmnopqrstuvwxyz0123456789 -a \
         case "${1,,}" in
             -h|--help)          # Show usage options
                 usage
-                exit
                 ;;
             -v|--version)       # Show script version
                 scriptversion
-                exit
                 ;;
             -l|--log)           # Log
                 #log=yes
@@ -102,8 +104,7 @@ if options="$(getopt -o abcdefghijklmnopqrstuvwxyz0123456789 -a \
                 ;;
             *)                  # Show usage options
                 echo -e "Invalid option '$1'\n"
-                usage
-                exit
+                usage "$1"
                 ;;
         esac
         shift
@@ -354,9 +355,9 @@ check_key_value(){
 check_section_key_value(){
     # $1 is path/file
     # $2 is section
-    # $3 is description
-    # $4 is key
-    setting="$(get_section_key_value "$1" "$2" "$4")"
+    # $3 is key
+    # $4 is description
+    setting="$(get_section_key_value "$1" "$2" "$3")"
     if [[ -f $1 ]]; then
         if [[ -n $2 ]]; then
             if [[ -n $3 ]]; then
@@ -388,22 +389,22 @@ check_modeldtb(){
 
 if [[ $check == "yes" ]]; then
     echo ""
-    check_section_key_value "$m2cardconf" E10M20-T1_sup_nic "E10M20-T1 NIC" "${modelname}"
-    check_section_key_value "$m2cardconf" E10M20-T1_sup_nvme "E10M20-T1 NVMe" "${modelname}"
-    check_section_key_value "$m2cardconf" E10M20-T1_sup_sata "E10M20-T1 SATA" "${modelname}"
+    check_section_key_value "$m2cardconf" E10M20-T1_sup_nic "${modelname}" "E10M20-T1 NIC"
+    check_section_key_value "$m2cardconf" E10M20-T1_sup_nvme "${modelname}" "E10M20-T1 NVMe"
+    check_section_key_value "$m2cardconf" E10M20-T1_sup_sata "${modelname}" "E10M20-T1 SATA"
     check_modeldtb "E10M20-T1"
 
     echo ""
-    check_section_key_value "$m2cardconf" M2D20_sup_nvme "M2D20 NVMe" "${modelname}"
+    check_section_key_value "$m2cardconf" M2D20_sup_nvme "${modelname}" "M2D20 NVMe"
     check_modeldtb "M2D20"
 
     echo ""
-    check_section_key_value "$m2cardconf" M2D18_sup_nvme "M2D18 NVMe" "${modelname}"
-    check_section_key_value "$m2cardconf" M2D18_sup_sata "M2D18 SATA" "${modelname}"
+    check_section_key_value "$m2cardconf" M2D18_sup_nvme "${modelname}" "M2D18 NVMe"
+    check_section_key_value "$m2cardconf" M2D18_sup_sata "${modelname}" "M2D18 SATA"
     check_modeldtb "M2D18"
 
     echo ""
-    check_section_key_value "$m2cardconf" M2D17_sup_sata "M2D17 SATA" "${modelname}"
+    check_section_key_value "$m2cardconf" M2D17_sup_sata "${modelname}" "M2D17 SATA"
     check_modeldtb "M2D17"
 
     echo ""
@@ -415,10 +416,10 @@ fi
 #------------------------------------------------------------------------------
 # Enable unsupported Synology M2 PCIe cards
 
-# DS1821+, DS1621+ and DS1520+ also need edited device tree blob file
-# /etc.defaults/model.dtb
-# RS822RP+, RS822+, RS1221RP+ and RS1221+ with DSM older than 7.2 need
-# device tree blob file from DSM 7.2 to support M2D18
+# DS1821+ and DS1621+ also need edited device tree blob file /etc.defaults/model.dtb
+# To support M2D18:
+#   DS1823xs+, DS2422+, RS2423+, RS2421+, RS2421RP+ and RS2821RP+ need edited model.dtb
+#   RS822+, RS822RP+, RS1221+ and RS1221RP+ with DSM older than 7.2 need model.dtb from DSM 7.2
 
 backupdb(){
     # Backup database file if needed
@@ -452,7 +453,13 @@ enable_card(){
             return
         fi
         # Check if already enabled
-        val=$(get_section_key_value "$1" "$2" "$modelname")
+        #
+        # No idea if "cat /proc/sys/kernel/syno_hw_version" returns upper or lower case RP
+        # "/usr/syno/etc.defaults/adapter_cards.conf" uses lower case rp but upper case RS
+        # So we'll convert RP to rp when needed.
+        #
+        modelrplowercase=${modelname//RP/rp}
+        val=$(get_section_key_value "$1" "$2" "$modelrplowercase")
         if [[ $val != "yes" ]]; then
             if set_section_key_value "$1" "$2" "$modelname" yes; then
                 echo -e "Enabled ${Yellow}$3${Off} for ${Cyan}$modelname${Off}" >&2
@@ -469,34 +476,25 @@ enable_card(){
 edit_modeldtb(){
     # $1 is E10M20-T1 or M2D20 or M2D18 or M2D17
     if [[ -f /etc.defaults/model.dtb ]]; then
-        backupdb "$modeldtb"
         if ! grep --text "$1" /etc.defaults/model.dtb >/dev/null; then
-            if [[ $modelname == "DS1520+" ]] ||\
-                [[ $modelname == "DS1621+" ]] || [[ $modelname == "DS1821+" ]] ||\
-                [[ $modelname == "DS1823+" ]] || [[ $modelname == "DS2422+" ]] ||\
-                [[ $modelname == "RS1221+" ]] || [[ $modelname == "RS1221RP+" ]] ||\
-                [[ $modelname == "RS2421+" ]] || [[ $modelname == "RS2421RP+" ]] ||\
-                [[ $modelname == "RS2423+" ]] || [[ $modelname == "RS2821RP+" ]] ||\
-                [[ $modelname == "RS822+" ]] || [[ $modelname == "RS822RP+" ]];
 
-
-# NEED TO SORT OUT rp OR RP IN model.dtb and adaptor_cards.conf ####################################################
-
-
+            # Check if the dtb file exists on github
+            urldtb=https://api.github.com/repos/007revad/Synology_enable_M2_card/contents/dtb
+            if curl "$urldtb" | grep dtb/"${modelname,,}"_model.dtb;
             then
                 echo "" >&2
-                if [[ -f ./dtb/${modelname}_model.dtb ]]; then
+                if [[ -f ./dtb/${modelname,,}_model.dtb ]]; then
                     # Edited device tree blob exists in dtb folder with script
-                    blob="./dtb/${modelname}_model.dtb"
-                elif [[ -f ./${modelname}_model.dtb ]]; then
+                    newdtb="./dtb/${modelname,,}_model.dtb"
+                elif [[ -f ./${modelname,,}_model.dtb ]]; then
                     # Edited device tree blob exists with script
-                    blob="./${modelname}_model.dtb"
+                    newdtb="./${modelname,,}_model.dtb"
                 else
                     # Download edited device tree blob model.dtb from github
                     if cd /var/services/tmp; then
-                        echo -e "Downloading ${modelname}_model.dtb" >&2
-                        repo=https://github.com/007revad/Synology_HDD_db
-                        url=${repo}/raw/main/dtb/${modelname}_model.dtb
+                        echo -e "Downloading ${modelname,,}_model.dtb" >&2
+                        repo=https://github.com/007revad/Synology_enable_M2_card
+                        url=${repo}/raw/main/dtb/${modelname,,}_model.dtb
                         curl -LJO -m 30 --connect-timeout 5 "$url"
                         echo "" >&2
                         cd "$scriptpath" || echo -e "${Error}ERROR${Off} Failed to cd to script location!"
@@ -505,19 +503,20 @@ edit_modeldtb(){
                     fi
 
                     # Check we actually downloaded the file
-                    if [[ -f /var/services/tmp/${modelname}_model.dtb ]]; then
-                        blob="/var/services/tmp/${modelname}_model.dtb"
+                    if [[ -f /var/services/tmp/${modelname,,}_model.dtb ]]; then
+                        newdtb="/var/services/tmp/${modelname,,}_model.dtb"
                     else
-                        echo -e "${Error}ERROR${Off} Failed to download ${modelname}_model.dtb!" >&2
+                        echo -e "${Error}ERROR${Off} Failed to download ${modelname,,}_model.dtb!" >&2
                     fi
                 fi
-                if [[ -f $blob ]]; then
+                if [[ -f $newdtb ]]; then
                     # Backup model.dtb
+                    backupdb "$modeldtb"
                     if ! backupdb "/etc.defaults/model.dtb"; then
                         echo -e "${Error}ERROR${Off} Failed to backup /etc.defaults/model.dtb!" >&2
                     else                
                         # Move and rename downloaded model.dtb
-                        if mv "$blob" "/etc.defaults/model.dtb"; then
+                        if mv "$newdtb" "/etc.defaults/model.dtb"; then
                             echo -e "Enabled ${Yellow}$1${Off} in ${Cyan}model.dtb${Off}" >&2
                             reboot=yes
                         else
@@ -532,7 +531,7 @@ edit_modeldtb(){
                     fi
                 else
                     #echo -e "${Error}ERROR${Off} Missing file ${modelname}_model.dtb" >&2
-                    echo -e "${Error}ERROR${Off} Missing file $blob" >&2
+                    echo -e "${Error}ERROR${Off} Missing file $newdtb" >&2
                 fi
             else
                 echo -e "\n${Cyan}Contact 007revad to get an edited model.dtb file for your model.${Off}" >&2
