@@ -31,6 +31,40 @@ Allows using your E10M20-T1, M2D20 or M2D18 cards in Synology NAS models that ar
 | RS1221RP+ |     |     | yes | | M2D18 already enabled in DSM 7.2 |
 | others    | yes | yes | yes | yes | The NAS must have a PCIe slot |
 
+## How to run the script
+
+### Download the script
+
+See <a href=images/how_to_download_generic.png/>How to download the script</a> for the easiest way to download the script.
+
+### Running the script via SSH
+
+**Note:** Replace /volume1/scripts/ with the path to where the script is located.
+Run the script then reboot the Synology:
+```YAML
+sudo -i /volume1/scripts/syno_enable_m2_card.sh
+```
+
+**Options:**
+```YAML
+  -c, --check      Check M.2 card status
+  -r, --restore    Restore backup to undo changes
+  -h, --help       Show this help message
+  -v, --version    Show the script version
+```
+
+### What about DSM updates?
+
+After any DSM update you will need to run this script, and the Synology_enable_M2_card script again. 
+
+### Schedule the script to run at boot-up
+
+Or you can schedule Synology_enable_M2_card to run when the Synology boots up, to avoid having to remember to run the script after a DSM update.
+
+See <a href=how_to_schedule.md/>How to schedule a script in Synology Task Scheduler</a>
+
+## Screenshots
+
 <p align="center">Available options</p>
 <p align="center"><img src="/images/help.png"></p>
 
