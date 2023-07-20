@@ -27,10 +27,10 @@ Allows using your E10M20-T1, M2D20 or M2D18 cards in Synology NAS models that ar
 | RS2421+   |     |     | yes | | E10M20-T1	and M2D20 already enabled in DSM |
 | RS2421RP+ |     |     | yes | | E10M20-T1	and M2D20 already enabled in DSM |
 | RS2821RP+ |     |     | yes | | E10M20-T1	and M2D20 already enabled in DSM |
-| RS822+    |     |     | yes | | DSM 7.1.1 and older. M2D18 already enabled in DSM 7.2 |
-| RS822RP+  |     |     | yes | | DSM 7.1.1 and older. M2D18 already enabled in DSM 7.2 |
-| RS1221+   |     |     | yes | | DSM 7.1.1 and older. M2D18 already enabled in DSM 7.2 |
-| RS1221RP+ |     |     | yes | | DSM 7.1.1 and older. M2D18 already enabled in DSM 7.2 |
+| RS822+    |     |     | yes | | M2D18 already enabled in DSM 7.2 |
+| RS822RP+  |     |     | yes | | M2D18 already enabled in DSM 7.2 |
+| RS1221+   |     |     | yes | | M2D18 already enabled in DSM 7.2 |
+| RS1221RP+ |     |     | yes | | M2D18 already enabled in DSM 7.2 |
 | others    | yes | yes | yes | yes | The NAS must have a PCIe x8 slot |
 
 </br>**Synology NAS models that this script won't work on:**
