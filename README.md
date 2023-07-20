@@ -13,7 +13,7 @@ Allows using your E10M20-T1, M2D20 or M2D18 cards in Synology NAS models that ar
   - Enables E10M20-T1, M2D20 and M2D18 for DS1821+, DS1621+.
   - Enables M2D18 for DS1823xs+, DS2422+, RS2423+, RS2421+, RS2421RP+, RS2821RP+.
   - Enables M2D18 for RS822RP+, RS822+, RS1221RP+ and RS1221+ using DSM 7.1.1 and older.
-  - Enables E10M20-T1, M2D20, M2D18 and M2D17 for other models  with a PCIe slot.
+  - Enables E10M20-T1, M2D20, M2D18 and M2D17 for other models  with a PCIe x8 slot.
 
 | Model | E10M20-T1 | M2D20 | M2D18 | M2D17 | Notes |
 |-|-|-|-|-|-|
