@@ -15,6 +15,8 @@ Allows using your E10M20-T1, M2D20 or M2D18 cards in Synology NAS models that ar
   - Enables M2D18 for RS822RP+, RS822+, RS1221RP+ and RS1221+ using DSM 7.1.1 and older.
   - Enables E10M20-T1, M2D20, M2D18 and M2D17 for other models  with a PCIe x8 slot.
 
+</br>
+
 | Model | E10M20-T1 | M2D20 | M2D18 | M2D17 | Notes |
 |-|-|-|-|-|-|
 | DS1821+   | yes | yes | yes | | |
@@ -29,7 +31,18 @@ Allows using your E10M20-T1, M2D20 or M2D18 cards in Synology NAS models that ar
 | RS822RP+  |     |     | yes | | M2D18 already enabled in DSM 7.2 |
 | RS1221+   |     |     | yes | | M2D18 already enabled in DSM 7.2 |
 | RS1221RP+ |     |     | yes | | M2D18 already enabled in DSM 7.2 |
-| others    | yes | yes | yes | yes | The NAS must have a PCIe slot |
+| others    | yes | yes | yes | yes | The NAS must have a PCIe x8 slot |
+
+</br>**Synology NAS models that this script won't work on:**
+
+| Model | E10M20-T1 | M2D20 | M2D18 | M2D17 | Notes |
+|-|-|-|-|-|-|
+| DS923+    | no  | no  | no  | no | PCIe x2 slot only fits the E10G22-T1 |
+| DS723+    | no  | no  | no  | no | PCIe x2 slot only fits the E10G22-T1 |
+| DS1522+   | no  | no  | no  | no | PCIe x2 slot only fits the E10G22-T1 |
+| RS422+    | no  | no  | no  | no | PCIe x2 slot only fits the E10G22-T1 |
+
+</br>
 
 ## How to run the script
 
@@ -62,6 +75,8 @@ After any DSM update you will need to run this script, and the Synology_enable_M
 Or you can schedule Synology_enable_M2_card to run when the Synology shutdown, to avoid having to remember to run the script after a DSM update.
 
 See <a href=how_to_schedule.md/>How to schedule a script in Synology Task Scheduler</a>
+
+</br>
 
 ## Screenshots
 
