@@ -1,2 +1,5 @@
+v1.0.6
+- Bug fix for RS...RP models.
+
 v1.0.5
-- First release
+- First release.
