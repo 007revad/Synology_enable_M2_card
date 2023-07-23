@@ -12,7 +12,7 @@
 # sudo -i /volume1/scripts/syno_enable_m2_card.sh
 #-----------------------------------------------------------------------------------
 
-scriptver="v1.0.4"
+scriptver="v1.0.5"
 script=Synology_enable_M2_card
 repo="007revad/Synology_enable_M2_card"
 
@@ -461,7 +461,7 @@ enable_card(){
         modelrplowercase=${modelname//RP/rp}
         val=$(get_section_key_value "$1" "$2" "$modelrplowercase")
         if [[ $val != "yes" ]]; then
-            if set_section_key_value "$1" "$2" "$modelname" yes; then
+            if set_section_key_value "$1" "$2" "$modelrplowercase" yes; then
                 echo -e "Enabled ${Yellow}$3${Off} for ${Cyan}$modelname${Off}" >&2
                 reboot=yes
             else
