@@ -12,7 +12,7 @@
 # sudo -i /volume1/scripts/syno_enable_m2_card.sh
 #-----------------------------------------------------------------------------------
 
-scriptver="v1.0.5"
+scriptver="v1.0.6"
 script=Synology_enable_M2_card
 repo="007revad/Synology_enable_M2_card"
 
@@ -268,10 +268,6 @@ if ! printf "%s\n%s\n" "$tag" "$scriptver" |
                             if [[ $copyerr != 1 ]] && [[ $permerr != 1 ]]; then
                                 echo -e "\n$tag and changes.txt downloaded to:"\
                                     "$scriptpath"
-                                #echo -e "${Cyan}Do you want to stop this script"\
-                                #    "so you can run the new one?${Off} [y/n]"
-                                #read -r reply
-                                #if [[ ${reply,,} == "y" ]]; then exit; fi
 
                                 # Reload script
                                 printf -- '-%.0s' {1..79}; echo  # print 79 -
@@ -361,7 +357,7 @@ check_section_key_value(){
     if [[ -f $1 ]]; then
         if [[ -n $2 ]]; then
             if [[ -n $3 ]]; then
-                echo -e "${Yellow}$3${Off} = $setting" >&2
+                echo -e "${Yellow}$4${Off} = $setting" >&2
             else
                 echo -e "Key name not specified!" >&2
             fi
@@ -412,9 +408,10 @@ if [[ $check == "yes" ]]; then
 fi
 
 
-
 #------------------------------------------------------------------------------
 # Enable unsupported Synology M2 PCIe cards
+
+# In DSM 7.2 every NAS model has the same /usr/syno/etc.defaults/adapter_cards.conf
 
 # DS1821+ and DS1621+ also need edited device tree blob file /etc.defaults/model.dtb
 # To support M2D18:
