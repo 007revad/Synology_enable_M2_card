@@ -1,3 +1,6 @@
+v1.0.6
+- Bug fix for displaying results when --check option used.
+
 v1.0.5
 - Bug fix for RS...RP models.
 
