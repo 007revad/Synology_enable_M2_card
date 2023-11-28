@@ -9,12 +9,14 @@
 
 Enable Synology M.2 PCIe cards in Synology NAS that don't officially support them
 
-Allows using E10M20-T1, M2D20, M2D18 or M2D17 cards in Synology NAS models that aren't on their supported model list.
+Allows using E10M20-T1, M2D20, M2D18 or M2D17 cards in Synology NAS models that aren't on their [supported model list](https://github.com/007revad/Synology_enable_M2_volume/wiki/Models-that-support-PCIe-M.2-cards).
 
   - Enables E10M20-T1, M2D20, M2D18 or M2D17 for DS1821+, DS1621+.
   - Enables M2D18 and M2D17 for DS1823xs+, DS2422+, RS2423+, RS2421+, RS2421RP+, RS2821RP+.
   - Enables M2D18 and M2D17 for RS822RP+, RS822+, RS1221RP+ and RS1221+ using DSM 7.1.1 and older.
   - Enables E10M20-T1, M2D20, M2D18 and M2D17 for other models  with a PCIe x8 slot.
+
+**Note:** If you want to create a volume on the M.2 drives in a PCIe M.2 adaptor card you need [Synology_M2_volume](https://github.com/007revad/Synology_M2_volume)
 
 </br>**Works on the following models:**
 
