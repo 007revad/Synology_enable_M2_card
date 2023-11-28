@@ -22,24 +22,24 @@ Allows using your E10M20-T1, M2D20, M2D18 or M2D17 cards in Synology NAS models 
 |-|-|-|-|-|-|
 | DS1821+   | yes | yes | yes | yes | |
 | DS1621+   | yes | yes | yes | yes | |
-| DS1823xs+ |     |     | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
-| DS2422+   |     |     | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
-| RS2423+   |     |     | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
-| RS2423RP+ |     |     | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
-| RS2421+   |     |     | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
-| RS2421RP+ |     |     | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
-| RS2821RP+ |     |     | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
-| RS822+    |     |     | yes | yes | M2D18 already enabled in DSM 7.2 |
-| RS822RP+  |     |     | yes | yes | M2D18 already enabled in DSM 7.2 |
-| RS1221+   |     |     | yes | yes | M2D18 already enabled in DSM 7.2 |
-| RS1221RP+ |     |     | yes | yes | M2D18 already enabled in DSM 7.2 |
+| DS1823xs+ | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
+| DS2422+   | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
+| RS2423+   | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
+| RS2423RP+ | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
+| RS2421+   | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
+| RS2421RP+ | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
+| RS2821RP+ | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
+| RS822+    | yes | yes | yes | yes | M2D18 already enabled in DSM 7.2 |
+| RS822RP+  | yes | yes | yes | yes | M2D18 already enabled in DSM 7.2 |
+| RS1221+   | yes | yes | yes | yes | M2D18 already enabled in DSM 7.2 |
+| RS1221RP+ | yes | yes | yes | yes | M2D18 already enabled in DSM 7.2 |
 | FS2500    | yes | yes | yes | yes | Should work but unconfirmed |
 | FS3410    | yes | yes | yes | yes | Should work but unconfirmed |
 | FS6400    | yes | yes | yes | yes | Should work but unconfirmed |
 | HD6500    | yes | yes | yes | yes | Should work but unconfirmed |
-| SA4310    |     |     | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
-| SA3610    |     |     | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
-| SA6400    |     |     | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
+| SA4310    | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
+| SA3610    | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
+| SA6400    | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
 | others    | yes | yes | yes | yes | The NAS must have a PCIe x8 slot |
 
 </br>**Synology NAS models that this script won't work on:**
