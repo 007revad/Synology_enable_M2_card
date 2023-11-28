@@ -12,7 +12,7 @@
 # sudo -i /volume1/scripts/syno_enable_m2_card.sh
 #-----------------------------------------------------------------------------------
 
-scriptver="v2.0.7"
+scriptver="v2.0.8"
 script=Synology_enable_M2_card
 repo="007revad/Synology_enable_M2_card"
 
@@ -213,25 +213,25 @@ if ! printf "%s\n%s\n" "$tag" "$scriptver" |
                 url="https://github.com/$repo/archive/refs/tags/$tag.tar.gz"
                 if ! curl -LJO -m 30 --connect-timeout 5 "$url";
                 then
-                    echo -e "${Error}ERROR ${Off} Failed to download"\
+                    echo -e "${Error}ERROR${Off} Failed to download"\
                         "$script-$shorttag.tar.gz!"
                 else
                     if [[ -f /tmp/$script-$shorttag.tar.gz ]]; then
                         # Extract tar file to /tmp/<script-name>
                         if ! tar -xf "/tmp/$script-$shorttag.tar.gz" -C "/tmp"; then
-                            echo -e "${Error}ERROR ${Off} Failed to"\
+                            echo -e "${Error}ERROR${Off} Failed to"\
                                 "extract $script-$shorttag.tar.gz!"
                         else
                             # Copy new script sh files to script location
                             if ! cp -p "/tmp/$script-$shorttag/"*.sh "$scriptpath"; then
                                 copyerr=1
-                                echo -e "${Error}ERROR ${Off} Failed to copy"\
+                                echo -e "${Error}ERROR${Off} Failed to copy"\
                                     "$script-$shorttag .sh file(s) to:\n $scriptpath"
                             else                   
                                 # Set permsissions on CHANGES.txt
                                 if ! chmod 744 "$scriptpath/"*.sh ; then
                                     permerr=1
-                                    echo -e "${Error}ERROR ${Off} Failed to set permissions on:"
+                                    echo -e "${Error}ERROR${Off} Failed to set permissions on:"
                                     echo "$scriptpath *.sh file(s)"
                                 fi
                             fi
@@ -239,13 +239,13 @@ if ! printf "%s\n%s\n" "$tag" "$scriptver" |
                             # Copy new CHANGES.txt file to script location
                             if ! cp -p "/tmp/$script-$shorttag/CHANGES.txt" "$scriptpath"; then
                                 copyerr=1
-                                echo -e "${Error}ERROR ${Off} Failed to copy"\
+                                echo -e "${Error}ERROR${Off} Failed to copy"\
                                     "$script-$shorttag/CHANGES.txt to:\n $scriptpath"
                             else                   
                                 # Set permsissions on CHANGES.txt
                                 if ! chmod 744 "$scriptpath/CHANGES.txt"; then
                                     permerr=1
-                                    echo -e "${Error}ERROR ${Off} Failed to set permissions on:"
+                                    echo -e "${Error}ERROR${Off} Failed to set permissions on:"
                                     echo "$scriptpath/CHANGES.txt"
                                 fi
                             fi
@@ -253,14 +253,14 @@ if ! printf "%s\n%s\n" "$tag" "$scriptver" |
                             # Delete downloaded .tar.gz file
                             if ! rm "/tmp/$script-$shorttag.tar.gz"; then
                                 #delerr=1
-                                echo -e "${Error}ERROR ${Off} Failed to delete"\
+                                echo -e "${Error}ERROR${Off} Failed to delete"\
                                     "downloaded /tmp/$script-$shorttag.tar.gz!"
                             fi
 
                             # Delete extracted tmp files
                             if ! rm -r "/tmp/$script-$shorttag"; then
                                 #delerr=1
-                                echo -e "${Error}ERROR ${Off} Failed to delete"\
+                                echo -e "${Error}ERROR${Off} Failed to delete"\
                                     "downloaded /tmp/$script-$shorttag!"
                             fi
 
@@ -275,13 +275,13 @@ if ! printf "%s\n%s\n" "$tag" "$scriptver" |
                             fi
                         fi
                     else
-                        echo -e "${Error}ERROR ${Off}"\
+                        echo -e "${Error}ERROR${Off}"\
                             "/tmp/$script-$shorttag.tar.gz not found!"
                         #ls /tmp | grep "$script"  # debug
                     fi
                 fi
             else
-                echo -e "${Error}ERROR ${Off} Failed to cd to /tmp!"
+                echo -e "${Error}ERROR${Off} Failed to cd to /tmp!"
             fi
         fi
     fi
@@ -399,7 +399,7 @@ check_section_key_value(){
                 if [[ $setting == "yes" ]]; then
                     echo -e "${Yellow}$4${Off} is enabled for ${Cyan}$3${Off}" >&2
                 else
-                    echo -e "$4 is ${Cyan}not{Off} enabled for $3" >&2
+                    echo -e "$4 is ${Cyan}not${Off} enabled for $3" >&2
                 fi
             else
                 echo -e "Key name not specified!" >&2
