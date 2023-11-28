@@ -9,14 +9,14 @@
 
 Enable Synology M.2 PCIe cards in Synology NAS that don't officially support them
 
-Allows using your E10M20-T1, M2D20, M2D18 or M2D17 cards in Synology NAS models that aren't on their supported model list.
+Allows using E10M20-T1, M2D20, M2D18 or M2D17 cards in Synology NAS models that aren't on their supported model list.
 
   - Enables E10M20-T1, M2D20, M2D18 or M2D17 for DS1821+, DS1621+.
   - Enables M2D18 and M2D17 for DS1823xs+, DS2422+, RS2423+, RS2421+, RS2421RP+, RS2821RP+.
   - Enables M2D18 and M2D17 for RS822RP+, RS822+, RS1221RP+ and RS1221+ using DSM 7.1.1 and older.
   - Enables E10M20-T1, M2D20, M2D18 and M2D17 for other models  with a PCIe x8 slot.
 
-</br>
+</br>**Works on the following models:**
 
 | Model | E10M20-T1 | M2D20 | M2D18 | M2D17 | Notes |
 |-|-|-|-|-|-|
@@ -33,23 +33,28 @@ Allows using your E10M20-T1, M2D20, M2D18 or M2D17 cards in Synology NAS models 
 | RS822RP+  | yes | yes | yes | yes | M2D18 already enabled in DSM 7.2 |
 | RS1221+   | yes | yes | yes | yes | M2D18 already enabled in DSM 7.2 |
 | RS1221RP+ | yes | yes | yes | yes | M2D18 already enabled in DSM 7.2 |
-| FS2500    | yes | yes | yes | yes | Should work but unconfirmed |
-| FS3410    | yes | yes | yes | yes | Should work but unconfirmed |
-| FS6400    | yes | yes | yes | yes | Should work but unconfirmed |
-| HD6500    | yes | yes | yes | yes | Should work but unconfirmed |
+| **others** | yes | yes | yes | yes | The NAS must have a PCIe x8 slot |
+
+</br>**Should work for the following models but I have not tested them:**
+
+| Model | E10M20-T1 | M2D20 | M2D18 | M2D17 | Notes |
+|-|-|-|-|-|-|
+| FS2500    | yes | yes | yes | yes | |
+| FS3410    | yes | yes | yes | yes | |
+| FS6400    | yes | yes | yes | yes | |
+| HD6500    | yes | yes | yes | yes | |
 | SA4310    | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
 | SA3610    | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
 | SA6400    | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
-| others    | yes | yes | yes | yes | The NAS must have a PCIe x8 slot |
 
 </br>**Synology NAS models that this script won't work on:**
 
 | Model | E10M20-T1 | M2D20 | M2D18 | M2D17 | Notes |
 |-|-|-|-|-|-|
-| DS923+    | no  | no  | no  | no | PCIe x2 slot only fits the E10G22-T1 |
-| DS723+    | no  | no  | no  | no | PCIe x2 slot only fits the E10G22-T1 |
-| DS1522+   | no  | no  | no  | no | PCIe x2 slot only fits the E10G22-T1 |
-| RS422+    | no  | no  | no  | no | PCIe x2 slot only fits the E10G22-T1 |
+| DS923+    | no  | no  | no  | no | PCIe x2 slot only fits the E10G22-T1-Mini |
+| DS723+    | no  | no  | no  | no | PCIe x2 slot only fits the E10G22-T1-Mini |
+| DS1522+   | no  | no  | no  | no | PCIe x2 slot only fits the E10G22-T1-Mini |
+| RS422+    | no  | no  | no  | no | PCIe x2 slot only fits the E10G22-T1-Mini |
 
 </br>
 
