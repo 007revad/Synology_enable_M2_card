@@ -2,7 +2,7 @@ v2.0.7
 - Updated to work with DSM 7.2 Update 2 and later. 
 - Now edits model.dtb instead of downloading a pre-edited version.
 - Added M2D17 for models that use devicetree,
-    - '21 and newer models with V1000, Broadwellnkv2, Purley, Broadwellnkv2 and Epyc7002 CPU arch.
+    - '21 and newer models with V1000, Broadwellnkv2, Purley and Epyc7002 CPU arch.
 
 v1.0.6
 - Bug fix for displaying results when --check option used.
