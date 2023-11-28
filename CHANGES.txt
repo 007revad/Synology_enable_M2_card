@@ -1,4 +1,4 @@
-v2.0.6
+v2.0.7
 - Updated to work with DSM 7.2 Update 2 and later. 
 - Now edits model.dtb instead of downloading a pre-edited version.
 - Added M2D17 for models that use devicetree,
