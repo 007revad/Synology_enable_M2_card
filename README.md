@@ -49,6 +49,17 @@ Allows using E10M20-T1, M2D20, M2D18 or M2D17 cards in Synology NAS models that 
 | SA3610    | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
 | SA6400    | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
 
+</br>**Synology NAS models that this script may work on?**
+
+| Model | E10M20-T1 | M2D20 | M2D18 | M2D17 | Notes |
+|-|-|-|-|-|-|
+| DS1623xs+ | ???  | ??? | ???  | ??? |  |
+| DS1817+   | ???  | ??? | ???  | ??? | M2D18 SATA already enabled in DSM |
+| DS1517+   | ???  | ??? | ???  | ??? | M2D18 SATA already enabled in DSM |
+| RS1219+   | ???  | ??? | ???  | ??? | M2D18 SATA already enabled in DSM |
+| RS818+    | ???  | ??? | ???  | ??? | M2D18 SATA already enabled in DSM |
+| RS818RP+  | ???  | ??? | ???  | ??? | M2D18 SATA already enabled in DSM |
+
 </br>**Synology NAS models that this script won't work on:**
 
 | Model | E10M20-T1 | M2D20 | M2D18 | M2D17 | Notes |
