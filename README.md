@@ -16,7 +16,7 @@ Allows using E10M20-T1, M2D20, M2D18 or M2D17 cards in Synology NAS models that 
   - Enables M2D18 and M2D17 for RS822RP+, RS822+, RS1221RP+ and RS1221+ using DSM 7.1.1 and older.
   - Enables E10M20-T1, M2D20, M2D18 and M2D17 for other models  with a PCIe x8 slot.
 
-[Synology HDD db](https://github.com/007revad/Synology_HDD_db) now enables using Storage Manager to createg volumes on M.2 drives in a PCIe M.2 adaptor card.
+[Synology HDD db](https://github.com/007revad/Synology_HDD_db) now enables using Storage Manager to create volumes on M.2 drives in a PCIe M.2 adaptor card.
 
 </br>**Works on the following models:**
 
@@ -48,6 +48,17 @@ Allows using E10M20-T1, M2D20, M2D18 or M2D17 cards in Synology NAS models that 
 | SA4310    | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
 | SA3610    | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
 | SA6400    | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
+
+</br>**Synology NAS models that this script may work on?**
+
+| Model | E10M20-T1 | M2D20 | M2D18 | M2D17 | Notes |
+|-|-|-|-|-|-|
+| DS1623xs+ | ???  | ??? | ???  | ??? |  |
+| DS1817+   | ???  | ??? | ???  | ??? | M2D18 SATA already enabled in DSM |
+| DS1517+   | ???  | ??? | ???  | ??? | M2D18 SATA already enabled in DSM |
+| RS1219+   | ???  | ??? | ???  | ??? | M2D18 SATA already enabled in DSM |
+| RS818+    | ???  | ??? | ???  | ??? | M2D18 SATA already enabled in DSM |
+| RS818RP+  | ???  | ??? | ???  | ??? | M2D18 SATA already enabled in DSM |
 
 </br>**Synology NAS models that this script won't work on:**
 
