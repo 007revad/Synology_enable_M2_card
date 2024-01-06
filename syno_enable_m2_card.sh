@@ -12,9 +12,10 @@
 # sudo -i /volume1/scripts/syno_enable_m2_card.sh
 #-----------------------------------------------------------------------------------
 
-scriptver="v2.0.8"
+scriptver="v3.0.9"
 script=Synology_enable_M2_card
 repo="007revad/Synology_enable_M2_card"
+scriptname=syno_enable_m2_card
 
 # Check BASH variable is bash
 if [ ! "$(basename "$BASH")" = bash ]; then
@@ -22,20 +23,6 @@ if [ ! "$(basename "$BASH")" = bash ]; then
     printf \\a
     exit 1
 fi
-
-#echo -e "bash version: $(bash --version | head -1 | cut -d' ' -f4)\n"  # debug
-
-# Shell Colors
-#Black='\e[0;30m'    # ${Black}
-#Red='\e[0;31m'      # ${Red}
-#Green='\e[0;32m'    # ${Green}
-Yellow='\e[0;33m'   # ${Yellow}
-#Blue='\e[0;34m'     # ${Blue}
-#Purple='\e[0;35m'   # ${Purple}
-Cyan='\e[0;36m'     # ${Cyan}
-#White='\e[0;37m'    # ${White}
-Error='\e[41m'      # ${Error}
-Off='\e[0m'         # ${Off}
 
 ding(){ 
     printf \\a
@@ -48,10 +35,17 @@ $script $scriptver - by 007revad
 Usage: $(basename "$0") [options]
 
 Options:
-  -c, --check      Check M.2 card status
-  -r, --restore    Restore backup to undo changes
-  -h, --help       Show this help message
-  -v, --version    Show the script version
+  -c, --check           Check M.2 card status
+  -r, --restore         Restore from backups to undo changes
+  -e, --email           Disable colored text in output scheduler emails.
+      --autoupdate=AGE  Auto update script (useful when script is scheduled)
+                          AGE is how many days old a release must be before
+                          auto-updating. AGE must be a number: 0 or greater
+      --model=CARD      Automatically enable specified card model
+                        Required if you want to schedule the script
+                          CARD can be E10M20-T1, M2D20, M2D18 or M2D17
+  -h, --help            Show this help message
+  -v, --version         Show the script version
 
 EOF
     exit 0
@@ -72,9 +66,11 @@ EOF
 args=("$@")
 
 
+autoupdate=""
+
 # Check for flags with getopt
-if options="$(getopt -o abcdefghijklmnopqrstuvwxyz0123456789 -a \
-    -l check,restore,help,version,log,debug -- "$@")"; then
+if options="$(getopt -o abcdefghijklmnopqrstuvwxyz0123456789 -l \
+    check,restore,help,version,email,autoupdate:,model:,log,debug --  "${args[@]}")"; then
     eval set -- "$options"
     while true; do
         case "${1,,}" in
@@ -97,6 +93,22 @@ if options="$(getopt -o abcdefghijklmnopqrstuvwxyz0123456789 -a \
             -r|--restore)       # Restore original settings
                 restore=yes
                 break
+                ;;
+            --model)            # Auto enable specified card
+                card="${2^^}"   # Convert to uppercase
+                shift
+                ;;
+            -e|--email)         # Disable colour text in task scheduler emails
+                color=no
+                ;;
+            --autoupdate)       # Auto update script
+                autoupdate=yes
+                if [[ $2 =~ ^[0-9]+$ ]]; then
+                    delay="$2"
+                    shift
+                else
+                    delay="0"
+                fi
                 ;;
             --)
                 shift
@@ -121,16 +133,29 @@ if [[ $debug == "yes" ]]; then
 fi
 
 
+# Shell Colors
+if [[ $color != "no" ]]; then
+    #Black='\e[0;30m'   # ${Black}
+    #Red='\e[0;31m'     # ${Red}
+    #Green='\e[0;32m'   # ${Green}
+    Yellow='\e[0;33m'   # ${Yellow}
+    #Blue='\e[0;34m'    # ${Blue}
+    #Purple='\e[0;35m'  # ${Purple}
+    Cyan='\e[0;36m'     # ${Cyan}
+    #White='\e[0;37m'   # ${White}
+    Error='\e[41m'      # ${Error}
+    Off='\e[0m'         # ${Off}
+else
+    echo ""  # For task scheduler email readability
+fi
+
+
 # Check script is running as root
 if [[ $( whoami ) != "root" ]]; then
     ding
     echo -e "${Error}ERROR${Off} This script must be run as sudo or root!"
     exit 1
 fi
-
-# Show script version
-#echo -e "$script $scriptver\ngithub.com/$repo\n"
-echo "$script $scriptver"
 
 # Get DSM major and minor versions
 #dsm=$(get_key_value /etc.defaults/VERSION majorversion)
@@ -146,6 +171,11 @@ echo "$script $scriptver"
 model=$(cat /proc/sys/kernel/syno_hw_version)
 modelname="$model"
 
+
+# Show script version
+#echo -e "$script $scriptver\ngithub.com/$repo\n"
+echo "$script $scriptver"
+
 # Get DSM full version
 productversion=$(get_key_value /etc.defaults/VERSION productversion)
 buildphase=$(get_key_value /etc.defaults/VERSION buildphase)
@@ -157,27 +187,59 @@ if [[ $buildphase == GM ]]; then buildphase=""; fi
 if [[ $smallfixnumber -gt "0" ]]; then smallfix="-$smallfixnumber"; fi
 echo -e "$model DSM $productversion-$buildnumber$smallfix $buildphase\n"
 
+
+# Get StorageManager version
+storagemgrver=$(synopkg version StorageManager)
+# Show StorageManager version
+if [[ $storagemgrver ]]; then echo -e "StorageManager $storagemgrver\n"; fi
+
+
 # Show options used
 if [[ ${#args[@]} -gt "0" ]]; then
     echo "Using options: ${args[*]}"
+fi
+
+# Check Synology has a PCIe x8 slot
+if ! dmidecode -t slot | grep "PCI Express x8" >/dev/null ; then
+    echo "${model}: No PCIe x8 slot found!"
+    exit 1
 fi
 
 
 #------------------------------------------------------------------------------
 # Check latest release with GitHub API
 
-get_latest_release(){ 
-    # Curl timeout options:
-    # https://unix.stackexchange.com/questions/94604/does-curl-have-a-timeout
-    curl --silent -m 10 --connect-timeout 5 \
-        "https://api.github.com/repos/$1/releases/latest" |
-    grep '"tag_name":' |          # Get tag line
-    sed -E 's/.*"([^"]+)".*/\1/'  # Pluck JSON value
+syslog_set(){ 
+    if [[ ${1,,} == "info" ]] || [[ ${1,,} == "warn" ]] || [[ ${1,,} == "err" ]]; then
+        if [[ $autoupdate == "yes" ]]; then
+            # Add entry to Synology system log
+            synologset1 sys "$1" 0x11100000 "$2"
+        fi
+    fi
 }
 
-tag=$(get_latest_release "$repo")
+
+# Get latest release info
+# Curl timeout options:
+# https://unix.stackexchange.com/questions/94604/does-curl-have-a-timeout
+release=$(curl --silent -m 10 --connect-timeout 5 \
+    "https://api.github.com/repos/$repo/releases/latest")
+
+# Release version
+tag=$(echo "$release" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
 shorttag="${tag:1}"
-#scriptpath=$(dirname -- "$0")
+
+# Release published date
+published=$(echo "$release" | grep '"published_at":' | sed -E 's/.*"([^"]+)".*/\1/')
+published="${published:0:10}"
+published=$(date -d "$published" '+%s')
+
+# Today's date
+now=$(date '+%s')
+
+# Days since release published
+age=$(((now - published)/(60*60*24)))
+
 
 # Get script location
 # https://stackoverflow.com/questions/59895/
@@ -190,12 +252,50 @@ while [ -L "$source" ]; do # Resolve $source until the file is no longer a symli
     [[ $source != /* ]] && source=$scriptpath/$source
 done
 scriptpath=$( cd -P "$( dirname "$source" )" >/dev/null 2>&1 && pwd )
-#echo "Script location: $scriptpath"  # debug
+scriptfile=$( basename -- "$source" )
+echo "Running from: ${scriptpath}/$scriptfile"
+
+
+# Warn if script located on M.2 drive
+scriptvol=$(echo "$scriptpath" | cut -d"/" -f2)
+vg=$(lvdisplay | grep /volume_"${scriptvol#volume}" | cut -d"/" -f3)
+md=$(pvdisplay | grep -B 1 -E '[ ]'"$vg" | grep /dev/ | cut -d"/" -f3)
+if cat /proc/mdstat | grep "$md" | grep nvme >/dev/null; then
+    echo -e "${Yellow}WARNING${Off} Don't store this script on an NVMe volume!"
+fi
+
+
+cleanup_tmp(){ 
+    cleanup_err=
+
+    # Delete downloaded .tar.gz file
+    if [[ -f "/tmp/$script-$shorttag.tar.gz" ]]; then
+        if ! rm "/tmp/$script-$shorttag.tar.gz"; then
+            echo -e "${Error}ERROR${Off} Failed to delete"\
+                "downloaded /tmp/$script-$shorttag.tar.gz!" >&2
+            cleanup_err=1
+        fi
+    fi
+
+    # Delete extracted tmp files
+    if [[ -d "/tmp/$script-$shorttag" ]]; then
+        if ! rm -r "/tmp/$script-$shorttag"; then
+            echo -e "${Error}ERROR${Off} Failed to delete"\
+                "downloaded /tmp/$script-$shorttag!" >&2
+            cleanup_err=1
+        fi
+    fi
+
+    # Add warning to DSM log
+    if [[ -z $cleanup_err ]]; then
+        syslog_set warn "$script update failed to delete tmp files"
+    fi
+}
 
 
 if ! printf "%s\n%s\n" "$tag" "$scriptver" |
-        sort --check=quiet --version-sort &> /dev/null ; then
-    echo -e "${Cyan}There is a newer version of this script available.${Off}"
+        sort --check=quiet --version-sort >/dev/null ; then
+    echo -e "\n${Cyan}There is a newer version of this script available.${Off}"
     echo -e "Current version: ${scriptver}\nLatest version:  $tag"
     if [[ -f $scriptpath/$script-$shorttag.tar.gz ]]; then
         # They have the latest version tar.gz downloaded but are using older version
@@ -206,82 +306,98 @@ if ! printf "%s\n%s\n" "$tag" "$scriptver" |
         echo "https://github.com/$repo/releases/latest"
         sleep 10
     else
-        echo -e "${Cyan}Do you want to download $tag now?${Off} [y/n]"
-        read -r -t 30 reply
+        if [[ $autoupdate == "yes" ]]; then
+            if [[ $age -gt "$delay" ]] || [[ $age -eq "$delay" ]]; then
+                echo "Downloading $tag"
+                reply=y
+            else
+                echo "Skipping as $tag is less than $delay days old."
+            fi
+        else
+            echo -e "${Cyan}Do you want to download $tag now?${Off} [y/n]"
+            read -r -t 30 reply
+        fi
+
         if [[ ${reply,,} == "y" ]]; then
+            # Delete previously downloaded .tar.gz file and extracted tmp files
+            cleanup_tmp
+
             if cd /tmp; then
                 url="https://github.com/$repo/archive/refs/tags/$tag.tar.gz"
-                if ! curl -LJO -m 30 --connect-timeout 5 "$url";
-                then
+                if ! curl -JLO -m 30 --connect-timeout 5 "$url"; then
                     echo -e "${Error}ERROR${Off} Failed to download"\
                         "$script-$shorttag.tar.gz!"
+                    syslog_set warn "$script $tag failed to download"
                 else
                     if [[ -f /tmp/$script-$shorttag.tar.gz ]]; then
                         # Extract tar file to /tmp/<script-name>
                         if ! tar -xf "/tmp/$script-$shorttag.tar.gz" -C "/tmp"; then
                             echo -e "${Error}ERROR${Off} Failed to"\
                                 "extract $script-$shorttag.tar.gz!"
+                            syslog_set warn "$script failed to extract $script-$shorttag.tar.gz!"
                         else
                             # Copy new script sh files to script location
-                            if ! cp -p "/tmp/$script-$shorttag/"*.sh "$scriptpath"; then
+                            if ! chmod a+x "/tmp/$script-$shorttag/"*.sh ; then
+                                permerr=1
+                                echo -e "${Error}ERROR${Off} Failed to set executable permissions"
+                                syslog_set warn "$script failed to set permissions on $tag"
+                            fi
+
+                            # Copy new script sh file to script location
+                            if ! cp -p "/tmp/$script-$shorttag/${scriptname}.sh" "${scriptpath}/${scriptfile}";
+                            then
                                 copyerr=1
                                 echo -e "${Error}ERROR${Off} Failed to copy"\
                                     "$script-$shorttag .sh file(s) to:\n $scriptpath"
-                            else                   
-                                # Set permsissions on CHANGES.txt
-                                if ! chmod 744 "$scriptpath/"*.sh ; then
-                                    permerr=1
-                                    echo -e "${Error}ERROR${Off} Failed to set permissions on:"
-                                    echo "$scriptpath *.sh file(s)"
-                                fi
+                                syslog_set warn "$script failed to copy $tag to script location"
                             fi
 
-                            # Copy new CHANGES.txt file to script location
-                            if ! cp -p "/tmp/$script-$shorttag/CHANGES.txt" "$scriptpath"; then
-                                copyerr=1
-                                echo -e "${Error}ERROR${Off} Failed to copy"\
-                                    "$script-$shorttag/CHANGES.txt to:\n $scriptpath"
-                            else                   
+                            # Copy new CHANGES.txt file to script location (if script on a volume)
+                            if [[ $scriptpath =~ /volume* ]]; then
                                 # Set permsissions on CHANGES.txt
-                                if ! chmod 744 "$scriptpath/CHANGES.txt"; then
+                                if ! chmod 664 "/tmp/$script-$shorttag/CHANGES.txt"; then
                                     permerr=1
                                     echo -e "${Error}ERROR${Off} Failed to set permissions on:"
                                     echo "$scriptpath/CHANGES.txt"
                                 fi
+
+                                # Copy new CHANGES.txt file to script location
+                                if ! cp -p "/tmp/$script-$shorttag/CHANGES.txt"\
+                                    "${scriptpath}/${scriptfile%.*}_CHANGES.txt";
+                                then
+                                    copyerr=1
+                                    echo -e "${Error}ERROR${Off} Failed to copy"\
+                                        "$script-$shorttag/CHANGES.txt to:\n $scriptpath"
+                                else
+                                    changestxt=" and changes.txt"
+                                fi
                             fi
 
                             # Delete downloaded .tar.gz file
-                            if ! rm "/tmp/$script-$shorttag.tar.gz"; then
-                                #delerr=1
-                                echo -e "${Error}ERROR${Off} Failed to delete"\
-                                    "downloaded /tmp/$script-$shorttag.tar.gz!"
-                            fi
-
-                            # Delete extracted tmp files
-                            if ! rm -r "/tmp/$script-$shorttag"; then
-                                #delerr=1
-                                echo -e "${Error}ERROR${Off} Failed to delete"\
-                                    "downloaded /tmp/$script-$shorttag!"
-                            fi
+                            cleanup_tmp
 
                             # Notify of success (if there were no errors)
                             if [[ $copyerr != 1 ]] && [[ $permerr != 1 ]]; then
-                                echo -e "\n$tag and changes.txt downloaded to:"\
-                                    "$scriptpath"
+                                echo -e "\n$tag ${scriptfile}$changestxt downloaded to: ${scriptpath}\n"
+                                syslog_set info "$script successfully updated to $tag"
 
                                 # Reload script
                                 printf -- '-%.0s' {1..79}; echo  # print 79 -
                                 exec "$0" "${args[@]}"
+                            else
+                                syslog_set warn "$script update to $tag had errors"
                             fi
                         fi
                     else
                         echo -e "${Error}ERROR${Off}"\
                             "/tmp/$script-$shorttag.tar.gz not found!"
-                        #ls /tmp | grep "$script"  # debug
+                        syslog_set warn "/tmp/$script-$shorttag.tar.gz not found"
                     fi
                 fi
+                cd "$scriptpath" || echo -e "${Error}ERROR${Off} Failed to cd to script location!"
             else
                 echo -e "${Error}ERROR${Off} Failed to cd to /tmp!"
+                syslog_set warn "$script update failed to cd to /tmp"
             fi
         fi
     fi
@@ -298,7 +414,6 @@ if [[ -f /etc.defaults/model.dtb ]]; then  # Is device tree model
     # If syno_hw_revision is r1 or r2 it's a real Synology,
     # and I need to edit model_rN.dtb instead of model.dtb
     if [[ $hwrevision =~ r[0-9] ]]; then
-        #echo "hwrevision: $hwrevision"  # debug
         hwrev="_$hwrevision"
     fi
 
@@ -309,8 +424,8 @@ if [[ -f /etc.defaults/model.dtb ]]; then  # Is device tree model
 fi
 
 #synoinfo="/etc.defaults/synoinfo.conf"
-m2cardconf="/usr/syno/etc.defaults/adapter_cards.conf"
-m2cardconf2="/usr/syno/etc/adapter_cards.conf"
+adapter_cards="/usr/syno/etc.defaults/adapter_cards.conf"
+adapter_cards2="/usr/syno/etc/adapter_cards.conf"
 
 
 #------------------------------------------------------------------------------
@@ -319,25 +434,25 @@ m2cardconf2="/usr/syno/etc/adapter_cards.conf"
 if [[ $restore == "yes" ]]; then
     echo
 
-    if [[ -f ${dtb_file}.bak ]] || [[ -f ${m2cardconf}.bak ]] ; then
+    if [[ -f ${dtb_file}.bak ]] || [[ -f ${adapter_cards}.bak ]] ; then
 
         # Restore adapter_cards.conf from backup
         # /usr/syno/etc.defaults/adapter_cards.conf
-        if [[ -f ${m2cardconf}.bak ]]; then
-            if cp -p "${m2cardconf}.bak" "${m2cardconf}"; then
-                echo -e "Restored $(basename -- "$m2cardconf")\n"
+        if [[ -f ${adapter_cards}.bak ]]; then
+            if cp -p "${adapter_cards}.bak" "${adapter_cards}"; then
+                echo -e "Restored ${adapter_cards}\n"
             else
                 restoreerr=1
-                echo -e "${Error}ERROR${Off} Failed to restore ${m2cardconf}!\n"
+                echo -e "${Error}ERROR${Off} Failed to restore ${adapter_cards}!\n"
             fi
         fi
         # /usr/syno/etc/adapter_cards.conf
-        if [[ -f ${m2cardconf2}.bak ]]; then
-            if cp -p "${m2cardconf2}.bak" "${m2cardconf2}"; then
-                echo -e "Restored $(basename -- "$m2cardconf2")\n"
+        if [[ -f ${adapter_cards2}.bak ]]; then
+            if cp -p "${adapter_cards2}.bak" "${adapter_cards2}"; then
+                echo -e "Restored ${adapter_cards2}\n"
             else
                 restoreerr=1
-                echo -e "${Error}ERROR${Off} Failed to restore ${m2cardconf2}!\n"
+                echo -e "${Error}ERROR${Off} Failed to restore ${adapter_cards2}!\n"
             fi
         fi
 
@@ -345,14 +460,14 @@ if [[ $restore == "yes" ]]; then
         if [[ -f ${dtb_file}.bak ]]; then
             # /etc.default/model.dtb
             if cp -p "${dtb_file}.bak" "${dtb_file}"; then
-                echo -e "Restored $(basename -- "$dtb_file")\n"
+                echo -e "Restored ${dtb_file}\n"
             else
                 restoreerr=1
                 echo -e "${Error}ERROR${Off} Failed to restore ${dtb_file}!\n"
             fi
             # Restore /etc/model.dtb from /etc.default/model.dtb
             if cp -p "${dtb_file}.bak" "${dtb2_file}"; then
-                echo -e "Restored $(basename -- "$dtb2_file")\n"
+                echo -e "Restored ${dtb2_file}\n"
             else
                 restoreerr=1
                 echo -e "${Error}ERROR${Off} Failed to restore ${dtb2_file}!\n"
@@ -439,26 +554,26 @@ if [[ $check == "yes" ]]; then
     # Only check /usr/syno/etc.defaults/adapter_cards.conf
 
     echo ""
-    check_section_key_value "$m2cardconf" E10M20-T1_sup_nic "${modelname}" "E10M20-T1 NIC"
-    check_section_key_value "$m2cardconf" E10M20-T1_sup_nvme "${modelname}" "E10M20-T1 NVMe"
-    #check_section_key_value "$m2cardconf" E10M20-T1_sup_sata "${modelname}" "E10M20-T1 SATA"
+    check_section_key_value "$adapter_cards" E10M20-T1_sup_nic "${modelname}" "E10M20-T1 NIC"
+    check_section_key_value "$adapter_cards" E10M20-T1_sup_nvme "${modelname}" "E10M20-T1 NVMe"
+    #check_section_key_value "$adapter_cards" E10M20-T1_sup_sata "${modelname}" "E10M20-T1 SATA"
     check_modeldtb "E10M20-T1"
 
     echo ""
-    check_section_key_value "$m2cardconf" M2D20_sup_nvme "${modelname}" "M2D20 NVMe"
+    check_section_key_value "$adapter_cards" M2D20_sup_nvme "${modelname}" "M2D20 NVMe"
     check_modeldtb "M2D20"
 
     echo ""
-    check_section_key_value "$m2cardconf" M2D18_sup_nvme "${modelname}" "M2D18 NVMe"
-    check_section_key_value "$m2cardconf" M2D18_sup_sata "${modelname}" "M2D18 SATA"
+    check_section_key_value "$adapter_cards" M2D18_sup_nvme "${modelname}" "M2D18 NVMe"
+    check_section_key_value "$adapter_cards" M2D18_sup_sata "${modelname}" "M2D18 SATA"
     check_modeldtb "M2D18"
 
     echo ""
-    check_section_key_value "$m2cardconf" M2D17_sup_sata "${modelname}" "M2D17 SATA"
+    check_section_key_value "$adapter_cards" M2D17_sup_sata "${modelname}" "M2D17 SATA"
     check_modeldtb "M2D17"
 
     #echo ""
-    #check_section_key_value "$m2cardconf" FX2422N_sup_nvme "${modelname}" "FX2422N NVMe"
+    #check_section_key_value "$adapter_cards" FX2422N_sup_nvme "${modelname}" "FX2422N NVMe"
     ##check_modeldtb "FX2422N"
 
     echo ""
@@ -482,10 +597,15 @@ backupdb(){
         if [[ $(basename "$1") == "synoinfo.conf" ]]; then
             echo "" >&2  # Formatting for stdout
         fi
-        if cp -p "$1" "$1.bak"; then
-            echo -e "Backed up $1" >&2
+        if [[ $2 == "long" ]]; then
+            fname="$1"
         else
-            echo -e "${Error}ERROR 5${Off} Failed to backup $1!" >&2
+            fname=$(basename -- "${1}")
+        fi
+        if cp -p "$1" "$1.bak"; then
+            echo -e "Backed up ${fname}" >&2
+        else
+            echo -e "${Error}ERROR 5${Off} Failed to backup ${fname}!" >&2
             return 1
         fi
     fi
@@ -502,8 +622,8 @@ enable_card(){
     # $2 is the section
     # $3 is the card model and mode
     if [[ -f $1 ]] && [[ -n $2 ]] && [[ -n $3 ]]; then
-        backupdb "$m2cardconf"
-        backupdb "$m2cardconf2"
+        backupdb "$adapter_cards" long
+        backupdb "$adapter_cards2" long
 
         # Check if section exists
         if ! grep '^\['"$2"'\]$' "$1" >/dev/null; then
@@ -522,7 +642,7 @@ enable_card(){
             # /usr/syno/etc.defaults/adapter_cards.conf
             if set_section_key_value "$1" "$2" "$modelrplowercase" yes; then
                 # /usr/syno/etc/adapter_cards.conf
-                set_section_key_value "$m2cardconf2" "$2" "$modelrplowercase" yes
+                set_section_key_value "$adapter_cards2" "$2" "$modelrplowercase" yes
                 echo -e "Enabled ${Yellow}$3${Off} for ${Cyan}$modelname${Off}" >&2
                 reboot=yes
             else
@@ -687,17 +807,6 @@ install_binfile(){
     cp -p "$binfile" "$3"
 }
 
-edit_dts(){ 
-    # $1 is M.2 card model
-    # Edit model.dts if needed
-    if ! grep "$1" "$dtb_file" >/dev/null; then
-        dts_m2_card "$1" "$dts_file"
-        echo -e "Added ${Yellow}$1${Off} to ${Cyan}model${hwrev}.dtb${Off}" >&2
-#    else
-#        echo -e "${Yellow}$1${Off} already exists in ${Cyan}model${hwrev}.dtb${Off}" >&2
-    fi
-}
-
 edit_modeldtb(){ 
     # $1 is E10M20-T1 or M2D20 or M2D18 or M2D17
     if [[ -f /etc.defaults/model.dtb ]]; then  # Is device tree model
@@ -714,9 +823,7 @@ edit_modeldtb(){
         if [[ -x /usr/sbin/dtc ]]; then
 
             # Backup model.dtb
-            if ! backupdb "$dtb_file"; then
-                echo -e "${Error}ERROR${Off} Failed to backup ${dtb_file}!" >&2
-            fi
+            backupdb "$dtb_file" long
 
             # Output model.dtb to model.dts
             dtc -q -I dtb -O dts -o "$dts_file" "$dtb_file"  # -q Suppress warnings
@@ -750,65 +857,78 @@ edit_modeldtb(){
 #------------------------------------------------------------------------------
 # Select M2 card model to enable
 
-PS3="Select your M.2 Card: "
-options=("E10M20-T1" "M2D20" "M2D18" "M2D17" "ALL" "Quit")
-select choice in "${options[@]}"; do
-    case "$choice" in
+select_card(){ 
+    case "$1" in
         E10M20-T1)
             echo ""
-            enable_card "$m2cardconf" E10M20-T1_sup_nic "E10M20-T1 NIC"
-            enable_card "$m2cardconf" E10M20-T1_sup_nvme "E10M20-T1 NVMe"
-            #enable_card "$m2cardconf" E10M20-T1_sup_sata "E10M20-T1 SATA"
+            enable_card "$adapter_cards" E10M20-T1_sup_nic "E10M20-T1 NIC"
+            enable_card "$adapter_cards" E10M20-T1_sup_nvme "E10M20-T1 NVMe"
+            #enable_card "$adapter_cards" E10M20-T1_sup_sata "E10M20-T1 SATA"
             cards=(E10M20-T1) && edit_modeldtb
-            break
+            return
         ;;
         M2D20)
             echo ""
-            enable_card "$m2cardconf" M2D20_sup_nvme "M2D20 NVMe"
+            enable_card "$adapter_cards" M2D20_sup_nvme "M2D20 NVMe"
             cards=(M2D20) && edit_modeldtb
-            break
+            return
         ;;
         M2D18)
             echo ""
-            enable_card "$m2cardconf" M2D18_sup_nvme "M2D18 NVMe"
-            enable_card "$m2cardconf" M2D18_sup_sata "M2D18 SATA"
+            enable_card "$adapter_cards" M2D18_sup_nvme "M2D18 NVMe"
+            enable_card "$adapter_cards" M2D18_sup_sata "M2D18 SATA"
             cards=(M2D18) && edit_modeldtb
-            break
+            return
         ;;
         M2D17)
             echo ""
-            enable_card "$m2cardconf" M2D17_sup_sata "M2D17 SATA"
+            enable_card "$adapter_cards" M2D17_sup_sata "M2D17 SATA"
             cards=(M2D17) && edit_modeldtb
-            break
+            return
         ;;
         FX2422N)
             echo ""
-            enable_card "$m2cardconf" FX2422N_sup_nvme "FX2422N"
+            enable_card "$adapter_cards" FX2422N_sup_nvme "FX2422N"
             #cards=(FX2422N) && edit_modeldtb
-            break
+            return
         ;;
         ALL)
             echo ""
-            enable_card "$m2cardconf" E10M20-T1_sup_nic "E10M20-T1 NIC"
-            enable_card "$m2cardconf" E10M20-T1_sup_nvme "E10M20-T1 NVMe"
-            #enable_card "$m2cardconf" E10M20-T1_sup_sata "E10M20-T1 SATA"
-            enable_card "$m2cardconf" M2D20_sup_nvme "M2D20 NVMe"
-            enable_card "$m2cardconf" M2D18_sup_nvme "M2D18 NVMe"
-            enable_card "$m2cardconf" M2D18_sup_sata "M2D18 SATA"
-            enable_card "$m2cardconf" M2D17_sup_sata "M2D17 SATA"
-            #enable_card "$m2cardconf" FX2422N_sup_nvme "FX2422N"
+            enable_card "$adapter_cards" E10M20-T1_sup_nic "E10M20-T1 NIC"
+            enable_card "$adapter_cards" E10M20-T1_sup_nvme "E10M20-T1 NVMe"
+            #enable_card "$adapter_cards" E10M20-T1_sup_sata "E10M20-T1 SATA"
+            enable_card "$adapter_cards" M2D20_sup_nvme "M2D20 NVMe"
+            enable_card "$adapter_cards" M2D18_sup_nvme "M2D18 NVMe"
+            enable_card "$adapter_cards" M2D18_sup_sata "M2D18 SATA"
+            enable_card "$adapter_cards" M2D17_sup_sata "M2D17 SATA"
+            #enable_card "$adapter_cards" FX2422N_sup_nvme "FX2422N"
 
             cards=("E10M20-T1" "M2D20" "M2D18" "M2D17") && edit_modeldtb
-            break
-        ;;
-        Quit)
-            exit
+            return
         ;;
         *)
             echo -e "Unknown M2 card type: $choice"
         ;;
     esac
-done
+}
+
+if [[ -n $card ]]; then
+    select_card "$card"
+else
+    PS3="Select your M.2 Card: "
+    options=("E10M20-T1" "M2D20" "M2D18" "M2D17" "ALL" "Quit")
+    select choice in "${options[@]}"; do
+        case "$choice" in
+            Quit)
+                exit
+            ;;
+            *)
+                select_card "$choice"
+                break
+            ;;
+        esac
+    done
+fi
 
 
 #------------------------------------------------------------------------------
