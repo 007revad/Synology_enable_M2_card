@@ -89,10 +89,17 @@ sudo -i /volume1/scripts/syno_enable_m2_card.sh
 
 **Options:**
 ```YAML
-  -c, --check      Check M.2 card status
-  -r, --restore    Restore backup to undo changes
-  -h, --help       Show this help message
-  -v, --version    Show the script version
+  -c, --check           Check M.2 card status
+  -r, --restore         Restore from backups to undo changes
+  -e, --email           Disable colored text in output scheduler emails.
+      --autoupdate=AGE  Auto update script (useful when script is scheduled)
+                        AGE is how many days old a release must be before
+                        auto-updating. AGE must be a number: 0 or greater
+      --model=CARD      Automatically enable specified card model
+                        Required if you want to schedule the script
+                        CARD can be E10M20-T1, M2D20, M2D18 or M2D17
+  -h, --help            Show this help message
+  -v, --version         Show the script version
 ```
 
 ### What about DSM updates?
