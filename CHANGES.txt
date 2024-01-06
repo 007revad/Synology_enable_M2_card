@@ -1,3 +1,16 @@
+v3.0.9
+- Added --model=CARD option to automatically enable specified card model.
+    - Required if you want to schedule the script.
+    - CARD can be E10M20-T1, M2D20, M2D18 or M2D17.
+- Added --autoupdate=AGE to auto update script (useful when script is scheduled).
+- Added -e, --email option to disable colored text in output scheduler emails.
+- Now adds entry to DSM system log if auto update succeeds or fails.
+- Now shows Storage Manager package version.
+- Now checks if the Synology has a PCIe x8 slot.
+- Now saves changes.txt as <script-filename>_changes.txt when updating the script.
+    - To not overwrite changes.txt if my other scripts are in the same folder.
+- Bug fix for detecting if script is located on M.2 drive.
+
 v2.0.8
 - Updated to work with DSM 7.2 Update 2 and later. 
 - Now edits model.dtb instead of downloading a pre-edited version.
