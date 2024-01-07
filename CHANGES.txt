@@ -10,6 +10,7 @@ v3.0.9
 - Now saves changes.txt as <script-filename>_changes.txt when updating the script.
     - To not overwrite changes.txt if my other scripts are in the same folder.
 - Bug fix for detecting if script is located on M.2 drive.
+- Bug fix for wrong filename when updating itself.
 
 v2.0.8
 - Updated to work with DSM 7.2 Update 2 and later. 
