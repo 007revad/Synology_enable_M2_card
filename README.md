@@ -18,7 +18,14 @@ Allows using E10M20-T1, M2D20, M2D18 or M2D17 cards in Synology NAS models that 
 
 [Synology HDD db](https://github.com/007revad/Synology_HDD_db) now enables using Storage Manager to create volumes on M.2 drives in a PCIe M.2 adaptor card.
 
+<br>
+
+## Which Synology models will this work on
+
 </br>**Works on the following models:**
+
+<details>
+  <summary>Click here to see list</summary>
 
 | Model | E10M20-T1 | M2D20 | M2D18 | M2D17 | Notes |
 |-|-|-|-|-|-|
@@ -37,7 +44,12 @@ Allows using E10M20-T1, M2D20, M2D18 or M2D17 cards in Synology NAS models that 
 | RS1221RP+ | yes | yes | yes | yes | M2D18 already enabled in DSM 7.2 |
 | **others** | yes | yes | yes | yes | The NAS must have a PCIe x8 slot |
 
+</details>
+
 </br>**Should work for the following models but I have not tested them:**
+
+<details>
+  <summary>Click here to see list</summary>
 
 | Model | E10M20-T1 | M2D20 | M2D18 | M2D17 | Notes |
 |-|-|-|-|-|-|
@@ -49,7 +61,12 @@ Allows using E10M20-T1, M2D20, M2D18 or M2D17 cards in Synology NAS models that 
 | SA3610    | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
 | SA6400    | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
 
+</details>
+
 </br>**Synology NAS models that this script may work on?**
+
+<details>
+  <summary>Click here to see list</summary>
 
 | Model | E10M20-T1 | M2D20 | M2D18 | M2D17 | Notes |
 |-|-|-|-|-|-|
@@ -60,7 +77,12 @@ Allows using E10M20-T1, M2D20, M2D18 or M2D17 cards in Synology NAS models that 
 | RS818+    | ???  | ??? | ???  | ??? | M2D18 SATA already enabled in DSM |
 | RS818RP+  | ???  | ??? | ???  | ??? | M2D18 SATA already enabled in DSM |
 
+</details>
+
 </br>**Synology NAS models that this script won't work on:**
+
+<details>
+  <summary>Click here to see list</summary>
 
 | Model | E10M20-T1 | M2D20 | M2D18 | M2D17 | Notes |
 |-|-|-|-|-|-|
@@ -69,7 +91,9 @@ Allows using E10M20-T1, M2D20, M2D18 or M2D17 cards in Synology NAS models that 
 | DS1522+   | no  | no  | no  | no | PCIe x2 slot only fits the E10G22-T1-Mini |
 | RS422+    | no  | no  | no  | no | PCIe x2 slot only fits the E10G22-T1-Mini |
 
-</br>
+</details>
+
+<br>
 
 ## How to run the script
 
