@@ -1,3 +1,8 @@
+v3.0.11
+- Improved script updating itself.
+- Now checks script is running on a Synology NAS.
+- Now checks if NAS has a PCIe Express x8 slot (DSM 7.x only).
+
 v3.0.9
 - Added --model=CARD option to automatically enable specified card model.
     - Required if you want to schedule the script.
