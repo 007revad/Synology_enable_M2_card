@@ -12,7 +12,7 @@
 # sudo -i /volume1/scripts/syno_enable_m2_card.sh
 #-----------------------------------------------------------------------------------
 
-scriptver="v3.0.9"
+scriptver="v3.0.11"
 script=Synology_enable_M2_card
 repo="007revad/Synology_enable_M2_card"
 scriptname=syno_enable_m2_card
@@ -21,6 +21,14 @@ scriptname=syno_enable_m2_card
 if [ ! "$(basename "$BASH")" = bash ]; then
     echo "This is a bash script. Do not run it with $(basename "$BASH")"
     printf \\a
+    exit 1
+fi
+
+# Check script is running on a Synology NAS
+if ! uname -a | grep -i synology >/dev/null; then
+    echo "This script is NOT running on a Synology NAS!"
+    echo "Copy the script to a folder on the Synology"
+    echo "and run it from there."
     exit 1
 fi
 
@@ -128,7 +136,7 @@ fi
 
 
 if [[ $debug == "yes" ]]; then
-    # set -x
+    set -x
     export PS4='`[[ $? == 0 ]] || echo "\e[1;31;40m($?)\e[m\n "`:.$LINENO:'
 fi
 
@@ -200,9 +208,11 @@ if [[ ${#args[@]} -gt "0" ]]; then
 fi
 
 # Check Synology has a PCIe x8 slot
-if ! dmidecode -t slot | grep "PCI Express x8" >/dev/null ; then
-    echo "${model}: No PCIe x8 slot found!"
-    exit 1
+if ! which dmidecode >/dev/null; then
+    if ! dmidecode -t slot | grep "PCI Express x8" >/dev/null ; then
+        echo "${model}: No PCIe x8 slot found!"
+        exit 1
+    fi
 fi
 
 
@@ -247,14 +257,13 @@ source=${BASH_SOURCE[0]}
 while [ -L "$source" ]; do # Resolve $source until the file is no longer a symlink
     scriptpath=$( cd -P "$( dirname "$source" )" >/dev/null 2>&1 && pwd )
     source=$(readlink "$source")
-    # If $source was a relative symlink, we need to resolve it 
+    # If $source was a relative symlink, we need to resolve it
     # relative to the path where the symlink file was located
     [[ $source != /* ]] && source=$scriptpath/$source
 done
 scriptpath=$( cd -P "$( dirname "$source" )" >/dev/null 2>&1 && pwd )
 scriptfile=$( basename -- "$source" )
 echo "Running from: ${scriptpath}/$scriptfile"
-
 
 # Warn if script located on M.2 drive
 scriptvol=$(echo "$scriptpath" | cut -d"/" -f2)
@@ -297,13 +306,14 @@ if ! printf "%s\n%s\n" "$tag" "$scriptver" |
         sort --check=quiet --version-sort >/dev/null ; then
     echo -e "\n${Cyan}There is a newer version of this script available.${Off}"
     echo -e "Current version: ${scriptver}\nLatest version:  $tag"
-    if [[ -f $scriptpath/$script-$shorttag.tar.gz ]]; then
+    scriptdl="$scriptpath/$script-$shorttag"
+    if [[ -f ${scriptdl}.tar.gz ]] || [[ -f ${scriptdl}.zip ]]; then
         # They have the latest version tar.gz downloaded but are using older version
-        echo "https://github.com/$repo/releases/latest"
+        echo "You have the latest version downloaded but are using an older version"
         sleep 10
-    elif [[ -d $scriptpath/$script-$shorttag ]]; then
+    elif [[ -d $scriptdl ]]; then
         # They have the latest version extracted but are using older version
-        echo "https://github.com/$repo/releases/latest"
+        echo "You have the latest version extracted but are using an older version"
         sleep 10
     else
         if [[ $autoupdate == "yes" ]]; then
@@ -336,7 +346,7 @@ if ! printf "%s\n%s\n" "$tag" "$scriptver" |
                                 "extract $script-$shorttag.tar.gz!"
                             syslog_set warn "$script failed to extract $script-$shorttag.tar.gz!"
                         else
-                            # Copy new script sh files to script location
+                            # Set script sh files as executable
                             if ! chmod a+x "/tmp/$script-$shorttag/"*.sh ; then
                                 permerr=1
                                 echo -e "${Error}ERROR${Off} Failed to set executable permissions"
@@ -348,13 +358,13 @@ if ! printf "%s\n%s\n" "$tag" "$scriptver" |
                             then
                                 copyerr=1
                                 echo -e "${Error}ERROR${Off} Failed to copy"\
-                                    "$script-$shorttag .sh file(s) to:\n $scriptpath"
+                                    "$script-$shorttag sh file(s) to:\n $scriptpath/${scriptfile}"
                                 syslog_set warn "$script failed to copy $tag to script location"
                             fi
 
                             # Copy new CHANGES.txt file to script location (if script on a volume)
                             if [[ $scriptpath =~ /volume* ]]; then
-                                # Set permsissions on CHANGES.txt
+                                # Set permissions on CHANGES.txt
                                 if ! chmod 664 "/tmp/$script-$shorttag/CHANGES.txt"; then
                                     permerr=1
                                     echo -e "${Error}ERROR${Off} Failed to set permissions on:"
@@ -363,9 +373,9 @@ if ! printf "%s\n%s\n" "$tag" "$scriptver" |
 
                                 # Copy new CHANGES.txt file to script location
                                 if ! cp -p "/tmp/$script-$shorttag/CHANGES.txt"\
-                                    "${scriptpath}/${scriptfile%.*}_CHANGES.txt";
+                                    "${scriptpath}/${scriptname}_CHANGES.txt";
                                 then
-                                    copyerr=1
+                                    if [[ $autoupdate != "yes" ]]; then copyerr=1; fi
                                     echo -e "${Error}ERROR${Off} Failed to copy"\
                                         "$script-$shorttag/CHANGES.txt to:\n $scriptpath"
                                 else
@@ -373,7 +383,7 @@ if ! printf "%s\n%s\n" "$tag" "$scriptver" |
                                 fi
                             fi
 
-                            # Delete downloaded .tar.gz file
+                            # Delete downloaded tmp files
                             cleanup_tmp
 
                             # Notify of success (if there were no errors)
