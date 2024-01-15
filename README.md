@@ -99,9 +99,10 @@ Allows using E10M20-T1, M2D20, M2D18 or M2D17 cards in Synology NAS models that 
 
 ### Download the script
 
-See <a href=images/how_to_download_generic.png/>How to download the script</a> for the easiest way to download the script.
-
-Do ***NOT*** save the script to a M.2 volume. The M.2 volume won't be available until after the script has run.
+1. Download the latest version _Source code (zip)_ from https://github.com/007revad/Synology_enable_M2_card/releases
+2. Save the download zip file to a folder on the Synology.
+    - Do ***NOT*** save the script to a M.2 volume. The M.2 volume may not be available until after the script has run.
+3. Unzip the zip file.
 
 ### Running the script via SSH
 
