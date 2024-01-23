@@ -111,7 +111,7 @@ Allows using E10M20-T1, M2D20, M2D18 or M2D17 cards in Synology NAS models that 
 **Note:** Replace /volume1/scripts/ with the path to where the script is located.
 Run the script then reboot the Synology:
 ```YAML
-sudo -i /volume1/scripts/syno_enable_m2_card.sh
+sudo -s /volume1/scripts/syno_enable_m2_card.sh
 ```
 
 **Options:**
