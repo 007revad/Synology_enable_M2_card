@@ -12,7 +12,7 @@
 # sudo -i /volume1/scripts/syno_enable_m2_card.sh
 #-----------------------------------------------------------------------------------
 
-scriptver="v3.0.11"
+scriptver="v3.0.12"
 script=Synology_enable_M2_card
 repo="007revad/Synology_enable_M2_card"
 scriptname=syno_enable_m2_card
