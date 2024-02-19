@@ -12,7 +12,7 @@
 # sudo -i /volume1/scripts/syno_enable_m2_card.sh
 #-----------------------------------------------------------------------------------
 
-scriptver="v3.0.13"
+scriptver="v3.0.14"
 script=Synology_enable_M2_card
 repo="007revad/Synology_enable_M2_card"
 scriptname=syno_enable_m2_card
@@ -166,8 +166,8 @@ if [[ $( whoami ) != "root" ]]; then
 fi
 
 # Get DSM major and minor versions
-#dsm=$(get_key_value /etc.defaults/VERSION majorversion)
-#dsminor=$(get_key_value /etc.defaults/VERSION minorversion)
+#dsm=$(/usr/syno/bin/synogetkeyvalue /etc.defaults/VERSION majorversion)
+#dsminor=$(/usr/syno/bin/synogetkeyvalue /etc.defaults/VERSION minorversion)
 #if [[ $dsm -gt "6" ]] && [[ $dsminor -gt "1" ]]; then
 #    dsm72="yes"
 #fi
@@ -185,10 +185,10 @@ modelname="$model"
 echo "$script $scriptver"
 
 # Get DSM full version
-productversion=$(get_key_value /etc.defaults/VERSION productversion)
-buildphase=$(get_key_value /etc.defaults/VERSION buildphase)
-buildnumber=$(get_key_value /etc.defaults/VERSION buildnumber)
-smallfixnumber=$(get_key_value /etc.defaults/VERSION smallfixnumber)
+productversion=$(/usr/syno/bin/synogetkeyvalue /etc.defaults/VERSION productversion)
+buildphase=$(/usr/syno/bin/synogetkeyvalue /etc.defaults/VERSION buildphase)
+buildnumber=$(/usr/syno/bin/synogetkeyvalue /etc.defaults/VERSION buildnumber)
+smallfixnumber=$(/usr/syno/bin/synogetkeyvalue /etc.defaults/VERSION smallfixnumber)
 
 # Show DSM full version and model
 if [[ $buildphase == GM ]]; then buildphase=""; fi
@@ -197,7 +197,7 @@ echo -e "$model DSM $productversion-$buildnumber$smallfix $buildphase\n"
 
 
 # Get StorageManager version
-storagemgrver=$(synopkg version StorageManager)
+storagemgrver=$(/usr/syno/bin/synopkg version StorageManager)
 # Show StorageManager version
 if [[ $storagemgrver ]]; then echo -e "StorageManager $storagemgrver\n"; fi
 
@@ -223,7 +223,7 @@ syslog_set(){
     if [[ ${1,,} == "info" ]] || [[ ${1,,} == "warn" ]] || [[ ${1,,} == "err" ]]; then
         if [[ $autoupdate == "yes" ]]; then
             # Add entry to Synology system log
-            synologset1 sys "$1" 0x11100000 "$2"
+            /usr/syno/bin/synologset1 sys "$1" 0x11100000 "$2"
         fi
     fi
 }
@@ -500,7 +500,7 @@ fi
 check_key_value(){ 
     # $1 is path/file
     # $2 is key
-    setting="$(get_key_value "$1" "$2")"
+    setting="$(/usr/syno/bin/synogetkeyvalue "$1" "$2")"
     if [[ -f $1 ]]; then
         if [[ -n $2 ]]; then
             echo -e "${Yellow}$2${Off} = $setting" >&2
@@ -517,7 +517,7 @@ check_section_key_value(){
     # $2 is section
     # $3 is key
     # $4 is description
-    setting="$(get_section_key_value "$1" "$2" "$3")"
+    setting="$(/usr/syno/bin/get_section_key_value "$1" "$2" "$3")"
     if [[ -f $1 ]]; then
         if [[ -n $2 ]]; then
             if [[ -n $3 ]]; then
@@ -647,12 +647,12 @@ enable_card(){
         # So we'll convert RP to rp when needed.
         #
         modelrplowercase=${modelname//RP/rp}
-        val=$(get_section_key_value "$1" "$2" "$modelrplowercase")
+        val=$(/usr/syno/bin/get_section_key_value "$1" "$2" "$modelrplowercase")
         if [[ $val != "yes" ]]; then
             # /usr/syno/etc.defaults/adapter_cards.conf
-            if set_section_key_value "$1" "$2" "$modelrplowercase" yes; then
+            if /usr/syno/bin/set_section_key_value "$1" "$2" "$modelrplowercase" yes; then
                 # /usr/syno/etc/adapter_cards.conf
-                set_section_key_value "$adapter_cards2" "$2" "$modelrplowercase" yes
+                /usr/syno/bin/set_section_key_value "$adapter_cards2" "$2" "$modelrplowercase" yes
                 echo -e "Enabled ${Yellow}$3${Off} for ${Cyan}$modelname${Off}" >&2
                 reboot=yes
             else
