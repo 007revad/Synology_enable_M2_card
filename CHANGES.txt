@@ -1,3 +1,7 @@
+v3.1.15
+- Added check that synonvme exists.
+- Added check that libsynonvme.so exists.
+
 v3.0.14
 - Hard coded /usr/syno/bin/ for Synology commands (to prevent $PATH issues).
 
