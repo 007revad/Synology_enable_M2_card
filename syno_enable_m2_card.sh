@@ -12,7 +12,7 @@
 # sudo -i /volume1/scripts/syno_enable_m2_card.sh
 #-----------------------------------------------------------------------------------
 
-scriptver="v3.0.14"
+scriptver="v3.1.15"
 script=Synology_enable_M2_card
 repo="007revad/Synology_enable_M2_card"
 scriptname=syno_enable_m2_card
@@ -208,11 +208,26 @@ if [[ ${#args[@]} -gt "0" ]]; then
 fi
 
 # Check Synology has a PCIe x8 slot
-if ! which dmidecode >/dev/null; then
+if which dmidecode >/dev/null; then
     if ! dmidecode -t slot | grep "PCI Express x8" >/dev/null ; then
         echo "${model}: No PCIe x8 slot found!"
         exit 1
     fi
+else
+    echo "${model} does not have dmidecode!"
+    exit 1
+fi
+
+# Check Synology has synonvme
+if ! which synonvme >/dev/null; then
+    echo "${model} does not have synonvme!"
+    exit 1
+fi
+
+# Check Synology has libsynonvme.so.1
+if [[ ! -e /usr/lib/libsynonvme.so ]]; then
+    echo "${model} does not have libsynonvme.so.1!"
+    exit 1
 fi
 
 
