@@ -14,7 +14,7 @@ Allows using E10M20-T1, M2D20, M2D18 or M2D17 cards in Synology NAS models that 
   - Enables E10M20-T1, M2D20, M2D18 or M2D17 for DS1821+, DS1621+.
   - Enables M2D18 and M2D17 for DS1823xs+, DS2422+, RS2423+, RS2421+, RS2421RP+, RS2821RP+.
   - Enables M2D18 and M2D17 for RS822RP+, RS822+, RS1221RP+ and RS1221+ using DSM 7.1.1 and older.
-  - Enables E10M20-T1, M2D20, M2D18 and M2D17 for other models  with a PCIe x8 slot.
+  - May enable E10M20-T1, M2D20, M2D18 and M2D17 for other models with a PCIe x8 slot that have /usr/syno/synonvme.
 
 [Synology HDD db](https://github.com/007revad/Synology_HDD_db) now enables using Storage Manager to create volumes on M.2 drives in a PCIe M.2 adaptor card.
 
@@ -33,6 +33,7 @@ Allows using E10M20-T1, M2D20, M2D18 or M2D17 cards in Synology NAS models that 
 | DS1621+   | yes | yes | yes | yes | |
 | DS1823xs+ | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
 | DS2422+   | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
+| | | | | |
 | RS2423+   | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
 | RS2423RP+ | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
 | RS2421+   | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
@@ -42,7 +43,13 @@ Allows using E10M20-T1, M2D20, M2D18 or M2D17 cards in Synology NAS models that 
 | RS822RP+  | yes | yes | yes | yes | M2D18 already enabled in DSM 7.2 |
 | RS1221+   | yes | yes | yes | yes | M2D18 already enabled in DSM 7.2 |
 | RS1221RP+ | yes | yes | yes | yes | M2D18 already enabled in DSM 7.2 |
-| **others** | yes | yes | yes | yes | The NAS must have a PCIe x8 slot |
+| | | | | |
+| **others** | maybe | maybe | maybe | maybe | See Others Notes |
+
+**Others Notes** 
+- Must have a PCIe x8 slot
+- Must have /usr/syno/bin/synonvme
+- Must have /usr/lib/libsynonvme.so.1
 
 </details>
 
@@ -56,7 +63,9 @@ Allows using E10M20-T1, M2D20, M2D18 or M2D17 cards in Synology NAS models that 
 | FS2500    | yes | yes | yes | yes | |
 | FS3410    | yes | yes | yes | yes | |
 | FS6400    | yes | yes | yes | yes | |
+| | | | | |
 | HD6500    | yes | yes | yes | yes | |
+| | | | | |
 | SA4310    | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
 | SA3610    | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
 | SA6400    | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
@@ -70,12 +79,7 @@ Allows using E10M20-T1, M2D20, M2D18 or M2D17 cards in Synology NAS models that 
 
 | Model | E10M20-T1 | M2D20 | M2D18 | M2D17 | Notes |
 |-|-|-|-|-|-|
-| DS1623xs+ | ???  | ??? | ???  | ??? |  |
-| DS1817+   | ???  | ??? | ???  | ??? | M2D18 SATA already enabled in DSM |
-| DS1517+   | ???  | ??? | ???  | ??? | M2D18 SATA already enabled in DSM |
-| RS1219+   | ???  | ??? | ???  | ??? | M2D18 SATA already enabled in DSM |
-| RS818+    | ???  | ??? | ???  | ??? | M2D18 SATA already enabled in DSM |
-| RS818RP+  | ???  | ??? | ???  | ??? | M2D18 SATA already enabled in DSM |
+| DS1621xs+ | ???  | ??? | ???  | ??? |  |
 
 </details>
 
@@ -86,10 +90,21 @@ Allows using E10M20-T1, M2D20, M2D18 or M2D17 cards in Synology NAS models that 
 
 | Model | E10M20-T1 | M2D20 | M2D18 | M2D17 | Notes |
 |-|-|-|-|-|-|
-| DS923+    | no  | no  | no  | no | PCIe x2 slot only fits the E10G22-T1-Mini |
-| DS723+    | no  | no  | no  | no | PCIe x2 slot only fits the E10G22-T1-Mini |
-| DS1522+   | no  | no  | no  | no | PCIe x2 slot only fits the E10G22-T1-Mini |
-| RS422+    | no  | no  | no  | no | PCIe x2 slot only fits the E10G22-T1-Mini |
+| DS923+     | no  | no  | no  | no | PCIe x2 slot only fits the E10G22-T1-Mini |
+| DS723+     | no  | no  | no  | no | PCIe x2 slot only fits the E10G22-T1-Mini |
+| DS1522+    | no  | no  | no  | no | PCIe x2 slot only fits the E10G22-T1-Mini |
+| RS422+     | no  | no  | no  | no | PCIe x2 slot only fits the E10G22-T1-Mini |
+| | | | | |
+| DS1817+    | no  | no  | no  | no | Does not have /usr/syno/bin/synonvme |
+| DS1517+    | no  | no  | no  | no | Does not have /usr/syno/bin/synonvme |
+| | | | | |
+| RS1219+    | no  | no  | no  | no | Does not have /usr/syno/bin/synonvme |
+| RS818+     | no  | no  | no  | no | Does not have /usr/syno/bin/synonvme |
+| RS818RP+   | no  | no  | no  | no | Does not have /usr/syno/bin/synonvme |
+| RS3617xs   | no  | no  | no  | no | Does not have /usr/syno/bin/synonvme |
+| RS18016xs+ | no  | no  | no  | no | Does not have /usr/syno/bin/synonvme |
+| | | | | |
+| FS3017     | no  | no  | no  | no | Does not have /usr/syno/bin/synonvme |
 
 </details>
 
