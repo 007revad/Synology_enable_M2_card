@@ -44,12 +44,12 @@ Allows using E10M20-T1, M2D20, M2D18 or M2D17 cards in Synology NAS models that 
 | RS1221+   | yes | yes | yes | yes | M2D18 already enabled in DSM 7.2 |
 | RS1221RP+ | yes | yes | yes | yes | M2D18 already enabled in DSM 7.2 |
 | | | | | |
-| **others** | maybe | maybe | maybe | maybe | See Others Notes |
+| **others** | maybe | maybe | maybe | maybe | See Other Models Notes |
 
-**Others Notes** 
-- Must have a PCIe x8 slot
-- Must have /usr/syno/bin/synonvme
-- Must have /usr/lib/libsynonvme.so.1
+**Other Models Notes** 
+- The Synology must have a PCIe x8 slot
+- DSM must include /usr/syno/bin/synonvme
+- DSM must include /usr/lib/libsynonvme.so.1
 
 </details>
 
