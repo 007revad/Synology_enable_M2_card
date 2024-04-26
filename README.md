@@ -44,12 +44,12 @@ Allows using E10M20-T1, M2D20, M2D18 or M2D17 cards in Synology NAS models that 
 | RS1221+   | yes | yes | yes | yes | M2D18 already enabled in DSM 7.2 |
 | RS1221RP+ | yes | yes | yes | yes | M2D18 already enabled in DSM 7.2 |
 | | | | | |
-| **others** | maybe | maybe | maybe | maybe | See Others Notes |
+| **others** | maybe | maybe | maybe | maybe | See Other Models Notes |
 
-**Others Notes** 
-- Must have a PCIe x8 slot
-- Must have /usr/syno/bin/synonvme
-- Must have /usr/lib/libsynonvme.so.1
+**Other Models Notes** 
+- The Synology must have a PCIe x8 slot
+- DSM must include /usr/syno/bin/synonvme
+- DSM must include /usr/lib/libsynonvme.so.1
 
 </details>
 
@@ -175,3 +175,9 @@ See <a href=how_to_schedule.md/>How to schedule a script in Synology Task Schedu
 
 <p align="center">Restoring the original M.2 card settings</p>
 <p align="center"><img src="/images/restore.png"></p>
+
+
+<p align="center">DS1821+ with a E10M20-T1</p>
+<p align="center"><img src="/images/1821_e10m20-1.png"></p>
+
+<p align="center"><img src="/images/1821_e10m20-2.png"></p>
