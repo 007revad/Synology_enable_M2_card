@@ -175,3 +175,9 @@ See <a href=how_to_schedule.md/>How to schedule a script in Synology Task Schedu
 
 <p align="center">Restoring the original M.2 card settings</p>
 <p align="center"><img src="/images/restore.png"></p>
+
+
+<p align="center">DS1821+ with a E10M20-T1</p>
+<p align="center"><img src="/images/1821_e10m20-1.png"></p>
+
+<p align="center"><img src="/images/1821_e10m20-2.png"></p>
