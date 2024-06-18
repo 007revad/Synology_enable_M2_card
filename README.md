@@ -40,12 +40,15 @@ Allows using E10M20-T1, M2D20, M2D18 or M2D17 cards in Synology NAS models that 
 | RS2421+   | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
 | RS2421RP+ | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
 | RS2821RP+ | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
-| RS822+    | yes | yes | yes | yes | M2D18 already enabled in DSM 7.2 |
-| RS822RP+  | yes | yes | yes | yes | M2D18 already enabled in DSM 7.2 |
-| RS1221+   | yes | yes | yes | yes | M2D18 already enabled in DSM 7.2 |
-| RS1221RP+ | yes | yes | yes | yes | M2D18 already enabled in DSM 7.2 |
+| RS822+    | yes | yes | yes | yes | E10M20-T1 and M2D18 already enabled in DSM* |
+| RS822RP+  | yes | yes | yes | yes | E10M20-T1 and M2D18 already enabled in DSM* |
+| RS1221+   | yes | yes | yes | yes | E10M20-T1 and M2D18 already enabled in DSM* |
+| RS1221RP+ | yes | yes | yes | yes | E10M20-T1 and M2D18 already enabled in DSM* |
 | | | | | |
 | **others** | maybe | maybe | maybe | maybe | See Other Models Notes |
+
+**Notes** 
+- Synology added support for the M2D18 in RS822+ and RS1221+ in DSM 7.2
 
 **Other Models Notes** 
 - The Synology must have a PCIe x8 slot
