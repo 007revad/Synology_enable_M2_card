@@ -17,6 +17,8 @@ Allows using E10M20-T1, M2D20, M2D18 or M2D17 cards in Synology NAS models that 
   - Enables M2D18 and M2D17 for RS822RP+, RS822+, RS1221RP+ and RS1221+ using DSM 7.1.1 and older.
   - May enable E10M20-T1, M2D20, M2D18 and M2D17 for other models with a PCIe x8 slot that have /usr/syno/synonvme.
 
+**Note:** M.2 SATA SSD drives do not work in DSM 7.2 so enabling the M2D17 is pointless.
+
 [Synology HDD db](https://github.com/007revad/Synology_HDD_db) now enables using Storage Manager to create volumes on M.2 drives in a PCIe M.2 adaptor card.
 
 <br>
