@@ -1,6 +1,6 @@
 v3.1.16
 - Made checking if Synology has a PCIe x8 slot more reliable.
-- Bug fix for false "Failed to delete tmp files" log entries
+- Bug fix for false "Failed to delete tmp files" log entries after script updates itself.
   - Bug first appeared in v3.0.11
 
 v3.1.15
