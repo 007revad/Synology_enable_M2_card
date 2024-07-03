@@ -12,7 +12,7 @@
 # sudo -i /volume1/scripts/syno_enable_m2_card.sh
 #-----------------------------------------------------------------------------------
 
-scriptver="v3.1.15"
+scriptver="v3.1.16"
 script=Synology_enable_M2_card
 repo="007revad/Synology_enable_M2_card"
 scriptname=syno_enable_m2_card
@@ -209,7 +209,8 @@ fi
 
 # Check Synology has a PCIe x8 slot
 if which dmidecode >/dev/null; then
-    if ! dmidecode -t slot | grep "PCI Express x8" >/dev/null ; then
+    #if ! dmidecode -t slot | grep "PCI Express x8" >/dev/null ; then
+    if ! dmidecode -t slot | grep "x8 PCI Express" >/dev/null ; then
         echo "${model}: No PCIe x8 slot found!"
         exit 1
     fi
@@ -311,7 +312,7 @@ cleanup_tmp(){
     fi
 
     # Add warning to DSM log
-    if [[ -z $cleanup_err ]]; then
+    if [[ $cleanup_err ]]; then
         syslog_set warn "$script update failed to delete tmp files"
     fi
 }
