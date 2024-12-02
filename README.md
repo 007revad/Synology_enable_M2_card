@@ -85,7 +85,7 @@ Allows using E10M20-T1, M2D20, M2D18 or M2D17 cards in Synology NAS models that 
 
 | Model | E10M20-T1 | M2D20 | M2D18 | M2D17 | Notes |
 |-|-|-|-|-|-|
-| DS1621xs+ | ???  | ??? | ???  | ??? |  |
+| DS1621xs+ | ???  | yes | ???  | ??? |  |
 
 </details>
 
