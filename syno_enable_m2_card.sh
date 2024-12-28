@@ -12,7 +12,7 @@
 # sudo -i /volume1/scripts/syno_enable_m2_card.sh
 #-----------------------------------------------------------------------------------
 
-scriptver="v3.1.16"
+scriptver="v3.1.17"
 script=Synology_enable_M2_card
 repo="007revad/Synology_enable_M2_card"
 scriptname=syno_enable_m2_card
@@ -207,10 +207,9 @@ if [[ ${#args[@]} -gt "0" ]]; then
     echo "Using options: ${args[*]}"
 fi
 
-# Check Synology has a PCIe x8 slot
+# Check Synology has a PCIe x8 or x16 slot
 if which dmidecode >/dev/null; then
-    #if ! dmidecode -t slot | grep "PCI Express x8" >/dev/null ; then
-    if ! dmidecode -t slot | grep "x8 PCI Express" >/dev/null ; then
+    if ! dmidecode -t slot | grep "PCI Express" | grep -E "x(8|16)" >/dev/null ; then
         echo "${model}: No PCIe x8 slot found!"
         exit 1
     fi
@@ -446,7 +445,6 @@ if [[ -f /etc.defaults/model.dtb ]]; then  # Is device tree model
     dtb_file="/etc.defaults/model${hwrev}.dtb"
     dtb2_file="/etc/model${hwrev}.dtb"
     #dts_file="/etc.defaults/model${hwrev}.dts"
-    dts_file="/tmp/model${hwrev}.dts"
 fi
 
 #synoinfo="/etc.defaults/synoinfo.conf"
@@ -554,7 +552,7 @@ check_section_key_value(){
 }
 
 check_modeldtb(){ 
-    # $1 is E10M20-T1 or M2D20 or M2D18 or M2D17
+    # $1 is E10M20-T1 or M2D20 or M2D18 or M2D17 or FX2422N
     if [[ -f "${dtb_file}" ]]; then
         if grep --text "$1" "${dtb_file}" >/dev/null; then
             echo -e "${Yellow}$1${Off} is enabled in ${dtb_file}" >& 2
@@ -598,9 +596,9 @@ if [[ $check == "yes" ]]; then
     check_section_key_value "$adapter_cards" M2D17_sup_sata "${modelname}" "M2D17 SATA"
     check_modeldtb "M2D17"
 
-    #echo ""
-    #check_section_key_value "$adapter_cards" FX2422N_sup_nvme "${modelname}" "FX2422N NVMe"
-    ##check_modeldtb "FX2422N"
+    echo ""
+    check_section_key_value "$adapter_cards" FX2422N_sup_nvme "${modelname}" "FX2422N NVMe"
+    check_modeldtb "FX2422N"
 
     echo ""
     exit
@@ -779,6 +777,50 @@ elif [[ $1 == M2D17 ]]; then
 };
 EOM2D17
 
+# https://new.reddit.com/r/synology/comments/18tdli8/using_a_cheap_pcie_m2_card_in_a_synology_nas_part/
+elif [[ $1 == FX2422N ]]; then  # Experimental
+    cat >> "$2" <<EOFX2422N
+
+	$1 {
+		compatible = "Synology";
+		model = "synology_${1,,}";
+		power_limit = "14.85,14.85";
+
+		m2_card@1 {
+
+			nvme {
+				pcie_postfix = "00.0,04.0,00.0";
+				port_type = "ssdcache";
+			};
+		};
+
+		m2_card@2 {
+
+			nvme {
+				pcie_postfix = "00.0,08.0,00.0";
+				port_type = "ssdcache";
+			};
+		};
+
+		m2_card@3 {
+
+			nvme {
+				pcie_postfix = "00.0,0c.0,00.0";
+				port_type = "ssdcache";
+			};
+		};
+
+		m2_card@4 {
+
+			nvme {
+				pcie_postfix = "00.0,10.0,00.0";
+				port_type = "ssdcache";
+			};
+		};
+	};
+};
+EOFX2422N
+
 fi
 }
 
@@ -834,7 +876,7 @@ install_binfile(){
 }
 
 edit_modeldtb(){ 
-    # $1 is E10M20-T1 or M2D20 or M2D18 or M2D17
+    # $1 is E10M20-T1 or M2D20 or M2D18 or M2D17 or FX2422N
     if [[ -f /etc.defaults/model.dtb ]]; then  # Is device tree model
         # Check if dtc exists and is executable
         if [[ ! -x $(which dtc) ]]; then
@@ -915,7 +957,7 @@ select_card(){
         FX2422N)
             echo ""
             enable_card "$adapter_cards" FX2422N_sup_nvme "FX2422N"
-            #cards=(FX2422N) && edit_modeldtb
+            cards=(FX2422N) && edit_modeldtb
             return
         ;;
         ALL)
@@ -927,9 +969,9 @@ select_card(){
             enable_card "$adapter_cards" M2D18_sup_nvme "M2D18 NVMe"
             enable_card "$adapter_cards" M2D18_sup_sata "M2D18 SATA"
             enable_card "$adapter_cards" M2D17_sup_sata "M2D17 SATA"
-            #enable_card "$adapter_cards" FX2422N_sup_nvme "FX2422N"
+            enable_card "$adapter_cards" FX2422N_sup_nvme "FX2422N"
 
-            cards=("E10M20-T1" "M2D20" "M2D18" "M2D17") && edit_modeldtb
+            cards=("E10M20-T1" "M2D20" "M2D18" "M2D17" "FX2422N") && edit_modeldtb
             return
         ;;
         *)
@@ -942,7 +984,7 @@ if [[ -n $card ]]; then
     select_card "$card"
 else
     PS3="Select your M.2 Card: "
-    options=("E10M20-T1" "M2D20" "M2D18" "M2D17" "ALL" "Quit")
+    options=("E10M20-T1" "M2D20" "M2D18" "M2D17" "FX2422N" "ALL" "Quit")
     select choice in "${options[@]}"; do
         case "$choice" in
             Quit)

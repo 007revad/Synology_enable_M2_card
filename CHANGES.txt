@@ -1,3 +1,7 @@
+v3.1.17
+- Added support for x16 PCIe slots.
+- Added support for FX2422N (Experimental).
+
 v3.1.16
 - Made checking if Synology has a PCIe x8 slot more reliable.
 - Bug fix for false "Failed to delete tmp files" log entries when script updates itself.
