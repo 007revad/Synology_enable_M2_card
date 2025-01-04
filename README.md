@@ -47,6 +47,7 @@ Allows using E10M20-T1, M2D20, M2D18 or M2D17 cards in Synology NAS models that 
 | RS1221+   | yes | yes | yes | yes | E10M20-T1 and M2D18 already enabled in DSM* |
 | RS1221RP+ | yes | yes | yes | yes | E10M20-T1 and M2D18 already enabled in DSM* |
 | RS2418+   | yes | yes | yes | yes | M2D20, M2D18 and M2D17 already enabled in DSM |
+| RS2418RP+ | yes | yes | yes | yes | M2D20, M2D18 and M2D17 already enabled in DSM |
 | | | | | |
 | **others** | maybe | maybe | maybe | maybe | See Other Models Notes |
 
