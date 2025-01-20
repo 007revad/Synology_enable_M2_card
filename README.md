@@ -12,8 +12,8 @@ Enable Synology M.2 PCIe cards in Synology NAS that don't officially support the
 
 Allows using E10M20-T1, M2D20, M2D18 or M2D17 cards in Synology NAS models that aren't on their [supported model list](https://github.com/007revad/Synology_enable_M2_volume/wiki/Models-that-support-PCIe-M.2-cards).
 
-  - Enables E10M20-T1, M2D20, M2D18 or M2D17 for DS1821+, DS1621+.
-  - Enables M2D18 and M2D17 for DS1823xs+, DS2422+, RS2423+, RS2421+, RS2421RP+, RS2821RP+.
+  - Enables E10M20-T1, M2D20, M2D18 and M2D17 for DS1823xs+, DS1821+, DS1621+.
+  - Enables M2D18 and M2D17 for DS2422+, RS2423+, RS2421+, RS2421RP+, RS2821RP+.
   - Enables M2D18 and M2D17 for RS822RP+, RS822+, RS1221RP+ and RS1221+ using DSM 7.1.1 and older.
   - May enable E10M20-T1, M2D20, M2D18 and M2D17 for other models with a PCIe x8 slot that have /usr/syno/synonvme.
 
@@ -32,7 +32,7 @@ Allows using E10M20-T1, M2D20, M2D18 or M2D17 cards in Synology NAS models that 
 |-|-|-|-|-|-|
 | DS1821+   | yes | yes | yes | yes | |
 | DS1621+   | yes | yes | yes | yes | |
-| DS1823xs+ | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
+| DS1823xs+ | yes | yes | yes | yes | |
 | DS2422+   | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
 | | | | | |
 | RS2423+   | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
