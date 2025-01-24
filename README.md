@@ -51,7 +51,7 @@ Allows using E10M20-T1, M2D20, M2D18 or M2D17 cards in Synology NAS models that 
 
 **Notes** 
 1. Synology added support for the M2D18 in RS822+ and RS1221+ in DSM 7.2
-2. [E10M20-T1 needs 1cm cut off](https://github.com/007revad/Synology_enable_M2_card/discussions/59) to fit into a RS2428RP+/RS2418+
+2. [E10M20-T1 needs 1cm cut off](https://github.com/007revad/Synology_enable_M2_card/discussions/59) to fit into a RS2418RP+/RS2418+
 
 **Other Models Notes** 
 - The Synology must have a PCIe x8 slot
