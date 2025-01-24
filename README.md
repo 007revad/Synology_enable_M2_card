@@ -44,19 +44,19 @@ Allows using E10M20-T1, M2D20, M2D18 or M2D17 cards in Synology NAS models that 
 | RS822RP+  | yes | yes | yes | yes | E10M20-T1 and M2D18 already enabled in DSM* |
 | RS1221+   | yes | yes | yes | yes | E10M20-T1 and M2D18 already enabled in DSM* |
 | RS1221RP+ | yes | yes | yes | yes | E10M20-T1 and M2D18 already enabled in DSM* |
-| RS2418+   | yes | yes | yes | yes | M2D20, M2D18 and M2D17 already enabled in DSM. E10M20-T1 see note |
-| RS2418RP+ | yes | yes | yes | yes | M2D20, M2D18 and M2D17 already enabled in DSM. E10M20-T1 see note |
+| RS2418+   | yes | yes | yes | yes | M2D20, M2D18 and M2D17 already enabled in DSM. E10M20-T1 see note 2 |
+| RS2418RP+ | yes | yes | yes | yes | M2D20, M2D18 and M2D17 already enabled in DSM. E10M20-T1 see note 2 |
 | | | | | |
 | **others** | maybe | maybe | maybe | maybe | See Other Models Notes |
 
 **Notes** 
-- Synology added support for the M2D18 in RS822+ and RS1221+ in DSM 7.2
+1. Synology added support for the M2D18 in RS822+ and RS1221+ in DSM 7.2
+2. [E10M20-T1 needs 1cm cut off](https://github.com/007revad/Synology_enable_M2_card/discussions/59) to fit into a RS2428RP+/RS2418+
 
 **Other Models Notes** 
 - The Synology must have a PCIe x8 slot
 - DSM must include /usr/syno/bin/synonvme
 - DSM must include /usr/lib/libsynonvme.so.1
-- [E10M20-T1 needs 1cm cut off](https://github.com/007revad/Synology_enable_M2_card/discussions/59) to fit into a RS2428RP+/RS2418+
 
 </details>
 
