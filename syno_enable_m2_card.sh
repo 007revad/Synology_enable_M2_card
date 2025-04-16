@@ -12,7 +12,7 @@
 # sudo -i /volume1/scripts/syno_enable_m2_card.sh
 #-----------------------------------------------------------------------------------
 
-scriptver="v3.1.17"
+scriptver="v3.1.18"
 script=Synology_enable_M2_card
 repo="007revad/Synology_enable_M2_card"
 scriptname=syno_enable_m2_card
@@ -445,6 +445,7 @@ if [[ -f /etc.defaults/model.dtb ]]; then  # Is device tree model
     dtb_file="/etc.defaults/model${hwrev}.dtb"
     dtb2_file="/etc/model${hwrev}.dtb"
     #dts_file="/etc.defaults/model${hwrev}.dts"
+    dts_file="/tmp/model${hwrev}.dts"
 fi
 
 #synoinfo="/etc.defaults/synoinfo.conf"
