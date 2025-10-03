@@ -6,9 +6,11 @@
 - [Synology recovery](#synology-recovery)
 - [Other Synology scripts](#other-synology-scripts)
 - [Synology hardware restrictions](#synology-hardware-restrictions)
+- [2025 plus models](#2025-plus-models)
 - [How To Guides](#how-to-guides)
 - [Synology dev](#synology-dev)
-##
+
+***
 
 ### Plex
 
@@ -60,6 +62,12 @@
 
 - **<a href="https://github.com/007revad/Synology_DSM_Telnet_Password">Synology_DSM_Telnet_Password</a>**
   - Synology DSM Recovery Telnet Password of the Day generator.
+
+- **<a href="https://github.com/007revad/Syno_DSM_Extractor_GUI">Syno_DSM_Extractor_GUI</a>**
+  - Windows GUI for extracting Synology DSM 7 pat files and spk package files.
+
+- **<a href="https://github.com/007revad/Synoboot_backup">Synoboot_backup</a>**
+  - Back up synoboot after each DSM update so you can recover from a corrupt USBDOM.
  
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [Back to Contents](#contents)
 
@@ -70,6 +78,9 @@
 
 - **<a href="https://github.com/007revad/Video_Station_for_DSM_722">Video_Station_for_DSM_722</a>**
   - Script to install Video Station in DSM 7.2.2
+
+- **<a href="https://github.com/007revad/SS_Motion_Detection">SS_Motion_Detection</a>**
+  - Installs previous Surveillance Station and Advanced Media Extensions versions so motion detection and HEVC are supported.
 
 - **<a href="https://github.com/007revad/Synology_Config_Backup">Synology_Config_Backup</a>**
   - Backup and export your Synology DSM configuration.
@@ -88,6 +99,9 @@
 
 - **<a href="https://github.com/007revad/Synology_Download_Station_Chrome_Extension">Synology_Download_Station_Chrome_Extension</a>**
   - Download Station Chrome Extension.
+ 
+- **<a href="https://github.com/007revad/Seagate_lowCurrentSpinup">Seagate_lowCurrentSpinup</a>**
+  - This script avoids the need to buy and install a higher wattage power supply when using multiple large Seagate SATA HDDs.
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [Back to Contents](#contents)
 
@@ -123,6 +137,22 @@
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [Back to Contents](#contents)
 
+### 2025 plus models
+
+- **<a href="https://github.com/007revad/Transcode_for_x25">Transcode_for_x25</a>**
+  - Installs the modules needed for Plex or Jellyfin hardware transcoding in DS425+ and DS225+.
+
+- **<a href="https://github.com/007revad/Synology_HDD_db/blob/main/2025_plus_models.md">2025 series or later Plus models</a>**
+  - Unverified 3rd party drive limitations and unofficial solutions.
+
+- **<a href="https://github.com/007revad/Synology_HDD_db/blob/main/2025_plus_models.md#setting-up-a-new-2025-or-later-plus-model-with-only-unverified-hdds">Setup with only 3rd party drives</a>**
+  - Setting up a new 2025 or later plus model with only unverified HDDs.
+
+- **<a href="https://github.com/007revad/Synology_HDD_db/blob/main/2025_plus_models.md#deleting-and-recreating-your-storage-pool-on-unverified-hdds">Recreating storage pool on migrated drives</a>**
+  - Deleting and recreating your storage pool on unverified HDDs.
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [Back to Contents](#contents)
+
 ### How To Guides
 
 - **<a href="https://github.com/007revad/Synology_SSH_key_setup">Synology_SSH_key_setup</a>**
@@ -135,10 +165,13 @@
 - **<a href="https://github.com/007revad/Download_Synology_Archive">Download_Synology_Archive</a>**
   - Download all or part of the Synology archive.
 
+- **<a href="https://github.com/007revad/Syno_DSM_Extractor_GUI">Syno_DSM_Extractor_GUI</a>**
+  - Windows GUI for extracting Synology DSM 7 pat files and spk package files.
+
 - **<a href="https://github.com/007revad/ScriptNotify">ScriptNotify</a>**
   - DSM 7 package to allow your scripts to send DSM notifications.
 
 - **<a href="https://github.com/007revad/DTC_GUI_for_Windows">DTC_GUI_for_Windows</a>**
-  - GUI for DTC.exe for Window.
+  - GUI for DTC.exe for Windows.
 
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [Back to Contents](#contents)
