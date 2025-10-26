@@ -1,4 +1,4 @@
-v3.1.18
+v3.1.19
 - Added support for x16 PCIe slots.
 - Added support for FX2422N (Experimental).
 
