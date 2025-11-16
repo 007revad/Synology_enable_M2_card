@@ -31,12 +31,13 @@ Allows using E10M20-T1, M2D20, M2D18 or M2D17 cards in Synology NAS models that 
 | Model | E10M20-T1 | M2D20 | M2D18 | M2D17 | Notes |
 |-|-|-|-|-|-|
 | DS1825+   | yes | yes | yes | yes | |
-| DS1821+   | yes | yes | yes | yes | |
-| DS1621xs+ | yes | yes | ???  | ??? |  |
-| DS1621+   | yes | yes | yes | yes | |
 | DS1823xs+ | yes | yes | yes | yes | |
-| DS2422+   | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
+| DS2422+   | yes | yes | yes | yes | E10M20-T1 and M2D20 already enabled in DSM |
+| DS1821+   | yes | yes | yes | yes | |
+| DS1621xs+ | yes | yes | ??? | ??? | |
+| DS1621+   | yes | yes | yes | yes | |
 | | | | | |
+| RS2825RP+ | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
 | RS2423+   | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
 | RS2423RP+ | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
 | RS2421+   | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
@@ -48,6 +49,7 @@ Allows using E10M20-T1, M2D20, M2D18 or M2D17 cards in Synology NAS models that 
 | RS1221RP+ | yes | yes | yes | yes | E10M20-T1 and M2D18 already enabled in DSM* |
 | RS2418+   | yes | yes | yes | yes | M2D20, M2D18 and M2D17 already enabled in DSM. E10M20-T1 see note 2 |
 | RS2418RP+ | yes | yes | yes | yes | M2D20, M2D18 and M2D17 already enabled in DSM. E10M20-T1 see note 2 |
+| RS2818RP+ | yes | yes | yes | yes | M2D20, M2D18 and M2D17 already enabled in DSM. E10M20-T1 see note 2 |
 | | | | | |
 | **others** | maybe | maybe | maybe | maybe | See Other Models Notes |
 
@@ -75,9 +77,9 @@ Allows using E10M20-T1, M2D20, M2D18 or M2D17 cards in Synology NAS models that 
 | | | | | |
 | HD6500    | yes | yes | yes | yes | |
 | | | | | |
-| SA4310    | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
-| SA3610    | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
-| SA6400    | yes | yes | yes | yes | E10M20-T1	and M2D20 already enabled in DSM |
+| SA4310    | yes | yes | yes | yes | E10M20-T1 and M2D20 already enabled in DSM |
+| SA3610    | yes | yes | yes | yes | E10M20-T1 and M2D20 already enabled in DSM |
+| SA6400    | yes | yes | yes | yes | E10M20-T1 and M2D20 already enabled in DSM |
 
 </details>
 
@@ -88,7 +90,30 @@ Allows using E10M20-T1, M2D20, M2D18 or M2D17 cards in Synology NAS models that 
 
 | Model | E10M20-T1 | M2D20 | M2D18 | M2D17 | Notes |
 |-|-|-|-|-|-|
-| ??? | ??? | ??? | ???  | ??? |  |
+| DS3617xs   | yes | yes | ??? | ??? | E10M20-T1, M2D20 and M2D17 SATA already enabled in DSM |
+| DS3617xsII | yes | yes | ??? | ??? | E10M20-T1, M2D20 and M2D17 SATA already enabled in DSM |
+| DS3622xs+  | yes | yes | ??? | ??? | E10M20-T1 and M2D20 already enabled in DSM |
+| | | | | |
+| RS1619xs+  | ??? | ??? | ??? | ??? | |
+| RS2821RP+  | yes | yes | ??? | ??? | E10M20-T1 and M2D20 already enabled in DSM |
+| RS3617RPxs | yes | yes | ??? | ??? | E10M20-T1 and M2D20 already enabled in DSM |
+| RS3617xs+  | yes | yes | ??? | ??? | E10M20-T1 and M2D20 already enabled in DSM |
+| RS3618xs   | yes | yes | ??? | ??? | E10M20-T1 and M2D20 already enabled in DSM |
+| RS3621RPxs | yes | yes | ??? | ??? | E10M20-T1 and M2D20 already enabled in DSM |
+| RS3621xs+  | yes | yes | ??? | ??? | E10M20-T1 and M2D20 already enabled in DSM |
+| RS4017xs+  | yes | yes | ??? | ??? | E10M20-T1 and M2D20 already enabled in DSM |
+| RS4021xs+  | yes | yes | ??? | ??? | E10M20-T1 and M2D20 already enabled in DSM |
+| RS18017xs+ | yes | yes | ??? | ??? | E10M20-T1 and M2D20 already enabled in DSM |
+| | | | | |
+| FS1018     | ??? | ??? | yes | yes | MD18 already enabled in DSM | 
+| FS2017     | ??? | ??? | ??? | ??? | |
+| FS3400     | ??? | ??? | ??? | ??? | |
+| FS3600     | ??? | ??? | ??? | ??? | |
+| | | | | |
+| SA3200D    | ??? | ??? | ??? | ??? | |
+| SA3400     | yes | yes | ??? | ??? | E10M20-T1 and M2D20 already enabled in DSM |
+| SA3400D    | ??? | ??? | ??? | ??? | |
+| SA3600     | yes | yes | ??? | ??? | E10M20-T1 and M2D20 already enabled in DSM |
 
 </details>
 
